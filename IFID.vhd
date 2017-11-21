@@ -35,7 +35,7 @@ entity IFID is
            clk :  in STD_LOGIC;
            rst :  in STD_LOGIC;
 			  
-           inPc :  in STD_LOGIC_VECTOR (15 downto 0);
+           inRpc :  in STD_LOGIC_VECTOR (15 downto 0);
            inInstruction : in  STD_LOGIC_VECTOR (15 downto 0);
 			  
 			  outRpc :  out STD_LOGIC_VECTOR (15 downto 0); -- pc + 1

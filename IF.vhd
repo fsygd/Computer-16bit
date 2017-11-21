@@ -31,13 +31,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity IFF is
     Port (
-			  oldRpc :  in  STD_LOGIC_VECTOR (15 downto 0);
+			  clk :  in STD_LOGIC;
+			  rst :  in STD_LOGIC;
            bubble :  in  STD_LOGIC; -- to stop computer
            pcOffset : in  STD_LOGIC_VECTOR (15 downto 0); -- when branch
            pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
            pcMuxSel :  in  STD_LOGIC_VECTOR (1 downto 0); -- which pc should be selected (bind to decoder output)
-           newRpc : out  STD_LOGIC_VECTOR (15 downto 0); -- old_rpc + 1
-			  -- add pcBubble if you want more
+           rpc : out  STD_LOGIC_VECTOR (15 downto 0); -- pc + 1
 			  );
 end IFF;
 
