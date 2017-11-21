@@ -40,7 +40,7 @@ entity IDEXE is
 			  inOperand2: in  STD_LOGIC_VECTOR(15 downto 0);
 			  inRegWrite: in STD_LOGIC; -- RegWE
 			  inRegToWrite:  in  STD_LOGIC_VECTOR(3 downto 0); -- DestReg 
-			  inMemIn:   in STD_LOGIC; -- MemDIn
+			  inMemIn:  in STD_LOGIC_VECTOR(15 downto 0); -- MemDIn
 			  inMemWrite:   in STD_LOGIC; -- MemWE
 			  inMemAccess:  in STD_LOGIC; -- AccMem
 		
@@ -49,7 +49,7 @@ entity IDEXE is
 			  outOperand2:  out  STD_LOGIC_VECTOR(15 downto 0);
 			  outRegWrite out STD_LOGIC;
 			  outRegToWrite:   out  STD_LOGIC_VECTOR(3 downto 0);
-			  outMemIn:    out STD_LOGIC;
+			  outMemIn:    out STD_LOGIC_VECTOR(15 downto 0);
 			  outMemWrite: out STD_LOGIC; 
 			  outMemAccess: out STD_LOGIC;
 			  

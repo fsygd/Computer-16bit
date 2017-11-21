@@ -42,7 +42,7 @@ port(
 		regToWrite: OUT  STD_LOGIC_VECTOR(3 downto 0); -- which register to write back
 		regWrite: OUT  STD_LOGIC; -- whether write back
 		
-		memIn:  OUT STD_LOGIC; -- data to write in memory
+		memIn:  OUT STD_LOGIC_VECTOR(15 downto 0); -- data to write in memory
 		memWrite:  OUT STD_LOGIC; -- whether write memory
 		memAccess:  OUT STD_LOGIC; -- whether read memory
 		
