@@ -40,29 +40,119 @@ port(
 		regToRead2: OUT  STD_LOGIC_VECTOR(3 downto 0); -- (BSel
 		
 		regToWrite: OUT  STD_LOGIC_VECTOR(3 downto 0); -- which register to write back
-		regWrite: OUT  STD_LOGIC; -- whether write back
+		regWrite: OUT  STD_LOGIC; -- whether to write back
 		
-		memIn:  OUT STD_LOGIC; -- data to write in memory
-		memWrite:  OUT STD_LOGIC; -- whether write memory
-		memAccess:  OUT STD_LOGIC; -- whether read memory
+		memIn:  OUT STD_LOGIC_VECTOR(15 downto 0); -- data to write in memory
+		memWrite:  OUT STD_LOGIC; -- whether to write memory
+		memRead:  OUT STD_LOGIC; -- whether to read memory
 		
 		--*-- fast read & pc set part --*--
 		--*-- by access register files (using regToRead) --*--
 		
-	   dataRead1 : IN  STD_LOGIC_VECTOR (15 downto 0); -- bind to FWDUnit, the true data, can bind to operand?
-	   dataRead2 : IN  STD_LOGIC_VECTOR (15 downto 0);
+		dataRead1 : IN  STD_LOGIC_VECTOR (15 downto 0); -- bind to FWDUnit, the true data, can bind to operand?
+		dataRead2 : IN  STD_LOGIC_VECTOR (15 downto 0);
 		operand1 : OUT  STD_LOGIC_VECTOR(15 downto 0); -- data send to alu
 		operand2 : OUT  STD_LOGIC_VECTOR(15 downto 0);
 		rpc:  IN STD_LOGIC_VECTOR (15 downto 0); -- bind back to IF
-		pcMuxSel :  OUT STD_LOGIC_VECTOR (1 downto 0); -- bind back to IF
-		pcOffset :  OUT STD_LOGIC_VECTOR (15 downto 0); -- bind back to IF
+		pcMuxSel :  OUT STD_LOGIC_VECTOR (1 downto 0); -- bind back to IF 0:PC+1 1:PCVal
 		pcVal :  OUT  STD_LOGIC_VECTOR (15 downto 0); -- bind back to IF
-	); 
+	);
 end DECODE;
 
 architecture Behavioral of DECODE is
-
 begin
 -- combinational logic
+	Decoder: process(instruction)
+		alias opCode: std_logic_vector(4 downto 0) is instruction(15 downto 11);
+		alias rx: std_logic_vector(2 downto 0) is instruction(10 downto 8);
+		alias ry: std_logic_vector(2 downto 0) is instruction(7 downto 5);
+		alias rz: std_logic_vector(2 downto 0) is instruction(4 downto 2);
+	begin
+		case opCode is
+			when "01001" => --ADDIU
+				regToRead1 <= "0" & rx;
+				regToRead2 <= NO_REG;
+				regToWrite <= "0" & rx;
+				regWrite <= "1";
+				memIn <= (others => "X");
+				memWrite <= "0";
+				memRead <= "0";
+				op <= ADD;
+				operand1 <= dataRead1;
+				operand2(15 downto 8) <= (others => instruction(7));
+				operand2(7 downto 0) <= instruction(7 downto 0);
+				pcMuxSel <= "0";
+				pcVal <= (others => "X");
+			when "01000" => --ADDIU3
+				regToRead1 <= "0" & rx;
+				regToRead2 <= "0" & ry;
+				regToWrite <= "0" & ry;
+				regWrite <= "1";
+				memIn <= (others => "X");
+				memWrite <= "0";
+				memRead <= "0";
+				op <= ADD;
+				operand1 <= dataRead1;
+				operand2(15 downto 4) <= (others => instruction(3));
+				operand2(3 downto 0) <= instruction(3 downto 0);
+				pcMuxSel <= "0";
+				pcVal <= (others => "X");
+			when "01100" => --ADDSP
+				regToRead1 <= SP;
+				regToRead2 <= NO_REG;
+				regToWrite <= SP;
+				regWrite <= "1";
+				memIn <= (others => "X");
+				memWrite <= "0";
+				memRead <= "0";
+				op <= ADD;
+				operand1 <= dataRead1;
+				operand2(15 downto 8) <= (others => instruction(7));
+				operand2(7 downto 0) <= instruction(7 downto 0);
+				pcMuxSel <= "0";
+				pcVal <= (others => "X");
+			when "01100" => --ADDU
+				regToRead1 <= "0" & rx;
+				regToRead2 <= "0" & ry;
+				regToWrite <= "0" & rz;
+				regWrite <= "1";
+				memIn <= (others => "X");
+				memWrite <= "0";
+				memRead <= "0";
+				op <= ADD;
+				operand1 <= dataRead1;
+				operand2 <= dataRead2;
+				pcMuxSel <= "0";
+				pcVal <= (others => "X");
+			when "11100" => --AND
+				regToRead1 <= "0" & rx;
+				regToRead2 <= "0" & ry;
+				regToWrite <= "0" & rx;
+				regWrite <= "1";
+				memIn <= (others => "X");
+				memWrite <= "0";
+				memRead <= "0";
+				op <= AND;
+				operand1 <= dataRead1;
+				operand2 <= dataRead2;
+				pcMuxSel <= "0";
+				pcVal <= (others => "X");
+			when "00010" => --B
+				regToRead1 <= NO_REG;
+				regToRead2 <= NO_REG;
+				regToWrite <= NO_REG;
+				regWrite <= "0";
+				memIn <= (others => "X");
+				memWrite <= "0";
+				memRead <= "0";
+				op <=(others => "X");
+				operand1 <= (others => "X");
+				operand2 <= (others => "X");
+				pcMuxSel <= "1";
+				pcVal <= rpc + ((4 downto 0 => instruction(10)) & instruction(10 downto 0));
+			when others => --NOP
+				
+		end case;
+	end process;
 end Behavioral;
 

@@ -37,7 +37,6 @@ entity FWD is
 			  
 			  IsRegWriteForward : in STD_LOGIC; -- last instruction write reg ( regWrite in EXE
 			  registerWriteForward : in STD_LOGIC_VECTOR (3 downto 0); -- ( regToWrite in EXE
-			  -- regWriteForwardData : in STD_LOGIC_VECTOR (15 downto 0); -- (
 			  aluoutForwardData : in STD_LOGIC_VECTOR (15 downto 0); -- last alu output ( aluout in EXE	  
 			  IsMemAccessForward : in STD_LOGIC; -- memAccess in EXE
 			  
