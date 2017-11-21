@@ -36,7 +36,7 @@ entity EXEMEM is
 			  
 			  inRegWrite: in STD_LOGIC; -- whether to write back (RegWE
 			  inRegToWrite:  in  STD_LOGIC_VECTOR(3 downto 0); -- which register to write back (DestReg
-			  inMemIn:   in STD_LOGIC;
+			  inMemIn:   in  STD_LOGIC_VECTOR(15 downto 0);
 			  inMemWrite:   in STD_LOGIC;
 			  inMemAccess:  in STD_LOGIC;
 			  inAluout: in STD_LOGIC_VECTOR(15 downto 0);
@@ -44,7 +44,7 @@ entity EXEMEM is
 		
 			  outRegWrite out STD_LOGIC;
 			  outRegToWrite: out  STD_LOGIC_VECTOR(3 downto 0); 
-			  outMemIn: out STD_LOGIC; 
+			  outMemIn: out STD_LOGIC_VECTOR(15 downto 0); 
 			  outMemWrite: out STD_LOGIC;
 			  outMemAccess: out STD_LOGIC;
 			  outAluout: out STD_LOGIC_VECTOR(15 downto 0);
