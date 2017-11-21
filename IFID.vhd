@@ -44,11 +44,26 @@ entity IFID is
 end IFID;
 
 architecture Behavioral of IFID is
-
+signal RpcBuffer : STD_LOGIC_VECTOR (15 downto 0);
+signal InstructionBuffer : STD_LOGIC_VECTOR (15 downto 0);
 begin
 
 -- when CLK up, pass those data
 -- if bubble, don't do anything
+	process(clk, bubble, rst, inRpc, inInstruction)
+	begin
+		if rst = '0' then
+			RpcBuffer <= (others >= '0');
+			InstructionBuffer <= (others >= '0');
+		elsif clk'event and clk = '1' then
+			if bubble = '0' then
+				RpcBuffer <= inRpc;
+				InstructionBuffer <= inInstruction;
+			end if;
+		end if;
+	end process;
+
+	outRpc <= RpcBuffer;
+	outInstruction <= InstructionBuffer;
 
 end Behavioral;
-
