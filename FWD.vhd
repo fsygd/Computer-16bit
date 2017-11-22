@@ -48,8 +48,6 @@ entity FWD is
 			  registerWriteForwardForwardForward : in STD_LOGIC_VECTOR (3 downto 0); -- ( regToWrite in WB
 			  regWriteForwardForwardForwardData : in STD_LOGIC_VECTOR (15 downto 0); -- ( DestVal in WB
 			  
-			  pcMuxSel : in STD_LOGIC_VECTOR (1 downto 0);
-			  
 			  ALURegDataReal1 : out  STD_LOGIC_VECTOR (15 downto 0);
 			  ALURegDataReal2 : out  STD_LOGIC_VECTOR (15 downto 0);
 			  
@@ -72,6 +70,29 @@ begin
 		else
 			bubble <= '0';
 		end if;
+		
+		--ALURegDataReal1
+		if IsRegWriteForward = '1' and registerWriteForward = ALUReg1 then
+			ALURegDataReal1 <= aluoutForwardData;
+		elsif IsRegWriteForwardForward = '1' and registerWriteForwardForward = ALUReg1 then
+			ALURegDataReal1 <= regWriteForwardForwardData;
+		elsif IsRegWriteForwardForwardForward = '1' and registerWriteForwardForwardForward = ALUReg1 then
+			ALURegDataReal1 <= regWriteForwardForwardForwardData;
+		else
+			ALURegDataReal1 <= ALURegData1;
+		end if;
+		
+		--ALURegDataReal2
+		if IsRegWriteForward = '1' and registerWriteForward = ALUReg2 then
+			ALURegDataReal2 <= aluoutForwardData;
+		elsif IsRegWriteForwardForward = '1' and registerWriteForwardForward = ALUReg2 then
+			ALURegDataReal2 <= regWriteForwardForwardData;
+		elsif IsRegWriteForwardForwardForward = '1' and registerWriteForwardForwardForward = ALUReg2 then
+			ALURegDataReal2 <= regWriteForwardForwardForwardData;
+		else
+			ALURegDataReal2 <= ALURegData2;
+		end if;
+		
 	end process;
 end Behavioral;
 
