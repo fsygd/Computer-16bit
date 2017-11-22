@@ -33,7 +33,7 @@ entity ALU is
     Port ( op : in  STD_LOGIC;
            operand1 : in  STD_LOGIC;
            operand2 : in  STD_LOGIC;
-           aluout : out  STD_LOGIC);
+           aluout : out  STD_LOGIC)
 end ALU;
 
 architecture Behavioral of ALU is

@@ -34,13 +34,13 @@ entity MEMWB is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
 			  
-			  inRegWrite in STD_LOGIC; -- RegWE
+			  inRegWrite: in STD_LOGIC; -- RegWE
 			  inRegToWrite:  in  STD_LOGIC_VECTOR(3 downto 0); -- DestReg
 			  inDestval: in STD_LOGIC_VECTOR(15 downto 0); -- DestVal
 			
-			  outRegWrite out STD_LOGIC;
+			  outRegWrite: out STD_LOGIC;
 			  outRegToWrite: out STD_LOGIC_VECTOR(3 downto 0); -- bind to REG
-			  outDestval: out STD_LOGIC_VECTOR(15 downto 0);
+			  outDestval: out STD_LOGIC_VECTOR(15 downto 0)
 			  
 			  );
 
@@ -62,6 +62,7 @@ begin
 			RegWriteBuffer <= inRegWrite;
 			RegToWriteBuffer <= inRegToWrite;
 			DestvalBuffer <= inDestval;
+		end if;
 	end process;
 	outRegWrite <= RegWriteBuffer;
 	outRegToWrite <= RegToWriteBuffer;

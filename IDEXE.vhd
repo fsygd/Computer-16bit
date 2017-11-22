@@ -47,11 +47,11 @@ entity IDEXE is
 			  outOp:  out  STD_LOGIC_VECTOR(3 downto 0); 
 			  outOperand1: out  STD_LOGIC_VECTOR(15 downto 0); 
 			  outOperand2:  out  STD_LOGIC_VECTOR(15 downto 0);
-			  outRegWrite out STD_LOGIC;
+			  outRegWrite: out STD_LOGIC;
 			  outRegToWrite:   out  STD_LOGIC_VECTOR(3 downto 0);
 			  outMemIn:    out STD_LOGIC_VECTOR(15 downto 0);
 			  outMemWrite: out STD_LOGIC; 
-			  outMemAccess: out STD_LOGIC;
+			  outMemAccess: out STD_LOGIC
 			  
 			  
 			  );
