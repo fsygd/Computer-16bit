@@ -47,8 +47,24 @@ entity MEMWB is
 end MEMWB;
 
 architecture Behavioral of MEMWB is
-
+signal RegWriteBuffer: STD_LOGIC;
+signal RegToWriteBuffer: STD_LOGIC_VECTOR(3 downto 0);
+signal DestvalBuffer: STD_LOGIC_VECTOR(15 downto 0);
 begin
 -- pass when clk up
+	process(clk, rst, RegWriteBuffer, RegToWriteBuffer, DestvalBuffer)
+	begin
+		if rst = '0' then
+			RegWriteBuffer <= '0';
+			RegToWriteBuffer <= (others => '0');
+			DestvalBuffer <= (others => '0');
+		elsif clk'event and clk = '1' then
+			RegWriteBuffer <= inRegWrite;
+			RegToWriteBuffer <= inRegToWrite;
+			DestvalBuffer <= inDestval;
+	end process;
+	outRegWrite <= RegWriteBuffer;
+	outRegToWrite <= RegToWriteBuffer;
+	outDestval <= DestvalBuffer;
 end Behavioral;
 
