@@ -33,7 +33,7 @@ entity REG is
     Port ( clk : in  STD_LOGIC; -- this clk should only be used to write
            rst : in  STD_LOGIC;
 			  
-           regWrite : in  STD_LOGIC -- '1' to write
+           regWrite : in  STD_LOGIC; -- '1' to write
 			  
            regToWrite : in  STD_LOGIC_VECTOR (3 downto 0);
            dataToWrite : in  STD_LOGIC_VECTOR (15 downto 0);
@@ -43,7 +43,7 @@ entity REG is
            regToRead1 : in  STD_LOGIC_VECTOR (3 downto 0);
            regToRead2 : in  STD_LOGIC_VECTOR (3 downto 0);
            dataRead1 : out  STD_LOGIC_VECTOR (15 downto 0);
-           dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0);
+           dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0)
 			  
 			  );
 end REG;

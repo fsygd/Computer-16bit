@@ -35,7 +35,7 @@ entity IDEXE is
            rst : in  STD_LOGIC;
 			  bubble : in STD_LOGIC;
 			  
-			  inOp: in  STD_LOGIC_VECTOR(3 downto 0);
+			  inOp : in  STD_LOGIC_VECTOR(3 downto 0);
 			  inOperand1: in  STD_LOGIC_VECTOR(15 downto 0);
 			  inOperand2: in  STD_LOGIC_VECTOR(15 downto 0);
 			  inRegWrite: in STD_LOGIC; -- RegWE
