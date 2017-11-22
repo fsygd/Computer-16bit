@@ -51,10 +51,10 @@ entity FWD is
 			  pcMuxSel : in STD_LOGIC_VECTOR (1 downto 0);
 			  
 			  ALURegDataReal1 : out  STD_LOGIC_VECTOR (15 downto 0);
-			  ALURegDataReal2 : out  STD_LOGIC_VECTOR (15 downto 0)
+			  ALURegDataReal2 : out  STD_LOGIC_VECTOR (15 downto 0);
 			  
 			  bubble : out STD_LOGIC
-			  )
+			  );
 end FWD;
 
 architecture Behavioral of FWD is
