@@ -19,9 +19,9 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.STD_LOGIC_ARITH.ALL;
-USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-USE IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
 use def.ALL;
 
 -- Uncomment the following library declaration if using
@@ -34,7 +34,7 @@ use def.ALL;
 --use UNISIM.VComponents.all;
 
 entity DECODE is	
-port( 
+	port(
 		--*-- decode part --*--
 		instruction: IN  STD_LOGIC_VECTOR(15 downto 0);
 
@@ -60,13 +60,13 @@ port(
 		rpc:  IN STD_LOGIC_VECTOR (15 downto 0); -- bind back to IF
 		pcMuxSel :  OUT STD_LOGIC; -- bind back to IF 0:PC+1 1:PCVal
 		pcVal :  OUT  STD_LOGIC_VECTOR (15 downto 0) -- bind back to IF
-	);
+		);
 end DECODE;
 
 architecture Behavioral of DECODE is
 begin
 -- combinational logic
-	Decoder: process(instruction)
+	process(instruction)
 		alias opCode: std_logic_vector(4 downto 0) is instruction(15 downto 11);
 		alias rx: std_logic_vector(2 downto 0) is instruction(10 downto 8);
 		alias ry: std_logic_vector(2 downto 0) is instruction(7 downto 5);
