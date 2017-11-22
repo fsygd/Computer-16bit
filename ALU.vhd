@@ -19,6 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use def.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -79,10 +80,10 @@ begin
 			when OP_SUB =>
 				result <= operand1 - operand2;
 			
-			when OP_PASSA =>
+			when OP_PASS_A =>
 				result <= operand1;
 			
-			when OP_PASSB =>
+			when OP_PASS_B =>
 				result <= operand2;
 			
 			when OTHERS =>

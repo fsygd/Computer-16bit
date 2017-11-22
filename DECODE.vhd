@@ -19,6 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use def.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -55,7 +56,7 @@ port(
 		operand2 : OUT  STD_LOGIC_VECTOR(15 downto 0);
 		rpc:  IN STD_LOGIC_VECTOR (15 downto 0); -- bind back to IF
 		pcMuxSel :  OUT STD_LOGIC_VECTOR (1 downto 0); -- bind back to IF 0:PC+1 1:PCVal
-		pcVal :  OUT  STD_LOGIC_VECTOR (15 downto 0); -- bind back to IF
+		pcVal :  OUT  STD_LOGIC_VECTOR (15 downto 0) -- bind back to IF
 	);
 end DECODE;
 
