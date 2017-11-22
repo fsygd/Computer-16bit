@@ -30,17 +30,25 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity MEM is
-Port (
-		memRead : in  STD_LOGIC;
-		aluout : in STD_LOGIC_VECTOR(15 downto 0);
-		memData : in STD_LOGIC_VECTOR(15 downto 0);
-		destval : out STD_LOGIC_VECTOR(15 downto 0)
-	);
+	Port (
+			memRead : in  STD_LOGIC;
+			aluout : in STD_LOGIC_VECTOR(15 downto 0);
+			memData : in STD_LOGIC_VECTOR(15 downto 0);
+			destVal : out STD_LOGIC_VECTOR(15 downto 0)
+		);
 end MEM;
 
 architecture Behavioral of MEM is
 
 begin
 -- a selector
+	process(memRead, aluout, memData)
+	begin
+		if memRead = '0' then
+			destVal <= aluout;
+		else
+			destVal <= memData;
+		end if;
+	end process;
 end Behavioral;
 
