@@ -30,10 +30,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity ALU is
-    Port ( op : in  STD_LOGIC;
-           operand1 : in  STD_LOGIC;
-           operand2 : in  STD_LOGIC;
-           aluout : out  STD_LOGIC);
+    Port ( op : in  STD_LOGIC_VECTOR (3 downto 0);
+           operand1 : in  STD_LOGIC_VECTOR (15 downto 0);
+           operand2 : in  STD_LOGIC_VECTOR (15 downto 0);
+           aluout : out  STD_LOGIC_VECTOR (15 downto 0)
+			 );
 end ALU;
 
 architecture Behavioral of ALU is
@@ -41,6 +42,54 @@ architecture Behavioral of ALU is
 begin
 
 -- alu, combinational logic
+	process (operand1, operand2, op)
+	begin
+		case op is
+			when OP_ADD =>
+				result <= operand1 + operand2;
+			
+			when OP_AND =>
+				result <= operand1 and operand2;
+				
+			when OP_CMP =>
+				if operand1 = operand2 then
+					result <= x"0000";
+				else
+					result <= x"0001";
+				end if;
+			
+			when OP_OR =>
+				result <= operand1 - operand2;
+			
+			--fsygd: immediate = 0 ?
+			when OP_SLL =>
+				result <= to_stdlogicvector(to_bitvector(operand1) sll conv_integer(operand2));
+			
+			when OP_SLT =>
+				if signed(operand1) >= signed(operand2) then
+					result <= x"0000";
+				else
+					result <= x"0001";
+				end if;
+				
+			--fsygd: immediate = 0 ?
+			when OP_SRA =>
+				result <= to_stdlogicvector(to_bitvector(operand1) sra conv_integer(operand2));
+				
+			when OP_SUB =>
+				result <= operand1 - operand2;
+			
+			when OP_PASSA =>
+				result <= operand1;
+			
+			when OP_PASSB =>
+				result <= operand2;
+			
+			when OTHERS =>
+				result <= x"0000";
+		end case;
+		aluout <= result;
+	end process;
 
 end Behavioral;
 

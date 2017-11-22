@@ -37,7 +37,7 @@ entity IFF is
            pcOffset : in  STD_LOGIC_VECTOR (15 downto 0); -- when branch
            pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
            pcMuxSel :  in  STD_LOGIC_VECTOR (1 downto 0); -- which pc should be selected (bind to decoder output)
-           rpc : out  STD_LOGIC_VECTOR (15 downto 0); -- pc + 1
+           rpc : out  STD_LOGIC_VECTOR (15 downto 0) -- pc + 1
 			  );
 end IFF;
 

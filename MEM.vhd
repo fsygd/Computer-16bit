@@ -34,7 +34,7 @@ entity MEM is
             memAccess : in  STD_LOGIC;
             aluout : in STD_LOGIC_VECTOR(15 downto 0);
 				memData : in STD_LOGIC_VECTOR(15 downto 0);
-				destval : out STD_LOGIC_VECTOR(15 downto 0);
+				destval : out STD_LOGIC_VECTOR(15 downto 0)
 			  );
 end MEM;
 
