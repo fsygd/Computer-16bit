@@ -34,6 +34,7 @@ entity ALU is
            operand1 : in  STD_LOGIC_VECTOR (15 downto 0);
            operand2 : in  STD_LOGIC_VECTOR (15 downto 0);
            aluout : out  STD_LOGIC_VECTOR (15 downto 0)
+			 );
 end ALU;
 
 architecture Behavioral of ALU is
