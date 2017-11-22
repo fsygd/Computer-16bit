@@ -39,7 +39,7 @@ entity ALU is
 end ALU;
 
 architecture Behavioral of ALU is
-
+signal result : STD_LOGIC_VECTOR(15 downto 0);
 begin
 
 -- alu, combinational logic

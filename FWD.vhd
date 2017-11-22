@@ -60,7 +60,18 @@ end FWD;
 architecture Behavioral of FWD is
 
 begin
-
-
+	process(ALUReg1, ALUReg2, ALURegData1, ALURegData2,
+	IsRegWriteForward, registerWriteForward, aluoutForwardData, IsMemAccessForward,
+	IsRegWriteForwardForward, registerWriteForwardForward, regWriteForwardForwardData,
+	IsRegWriteForwardForwardForward, registerWriteForwardForwardForward, regWriteForwardForwardForwardData)
+	begin
+		--bubble
+		if IsRegWriteForward = '1' and IsMemAccessForward = '1' and
+			(registerWriteForward = ALUReg1 or registerWriteForward = ALUReg2) then
+			bubble <= '1';
+		else
+			bubble <= '0';
+		end if;
+	end process;
 end Behavioral;
 
