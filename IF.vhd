@@ -39,29 +39,31 @@ entity IFF is
 			bubble :  in  STD_LOGIC; -- to stop computer
 			pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
 			pcMuxSel :  in  STD_LOGIC; -- which pc should be selected (bind to decoder output)
+			pc : out  STD_LOGIC_VECTOR (15 downto 0);
 			rpc : out  STD_LOGIC_VECTOR (15 downto 0) -- pc + 1
 		);
 end IFF;
 
 architecture Behavioral of IFF is
-	signal pc : STD_LOGIC_VECTOR (15 downto 0);
+	signal tempPc : STD_LOGIC_VECTOR (15 downto 0);
 begin
 
 -- combinational logic
 	process(clk, rst, bubble, pcVal, pcMuxSel)
 	begin
 		if rst <= '0' then
-			pc <= (others => '0');
+			tempPc <= (others => '0');
 		elsif clk'event and clk = '1' then
 			if bubble = '1' then
 				--none
 			elsif pcMuxSel = '1' then
-				pc <= pcVal - x"1";
+				tempPc <= pcVal - x"1";
 			else
-				pc <= pc + x"1";
+				tempPc <= tempPc + x"1";
 			end if;
 		end if;
-		rpc <= pc + x"1";
+		pc <= tempPc;
+		rpc <= tempPc + x"1";
 	end process;
 end Behavioral;
 

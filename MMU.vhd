@@ -33,14 +33,137 @@ entity MMU is
 
 -- input pc -> output instruction
 -- input addr, dataIn -> write
+	Port(
+			clk : in STD_LOGIC;
+			rst : in STD_LOGIC;
 
+			memRead : in STD_LOGIC;
+			memWrite : in STD_LOGIC;
+			memAddr : in STD_LOGIC_VECTOR(15 downto 0);
+			dataIn : in STD_LOGIC_VECTOR(15 downto 0);
+			memData : out STD_LOGIC_VECTOR(15 downto 0);
 
+			pc : in STD_LOGIC_VECTOR (15 downto 0);
+			instruction : out STD_LOGIC_VECTOR(15 downto 0);
+
+			ram1_oe, ram1_rw, ram1_en : out STD_LOGIC; --RAM1
+			ram1_addr: out STD_LOGIC_VECTOR(15 downto 0);
+			ram1_data: inout STD_LOGIC_VECTOR(15 downto 0);
+
+			ram2_oe, ram2_rw,  ram2_en: out STD_LOGIC; --RAM2
+			ram2_addr: out STD_LOGIC_VECTOR(15 downto 0);
+			ram2_data: inout STD_LOGIC_VECTOR(15 downto 0);
+
+			data_ready, rdn, tbre, tsre, wrn: in STD_LOGIC; --COM
+		);
 end MMU;
 
 architecture Behavioral of MMU is
-
+	signal addr : STD_LOGIC_VECTOR(15 downto 0);
+	signal readRam : STD_LOGIC;
 begin
+	Addr_select : process(memAddr, pc, memRead, memWrite)
+	begin
+		if memRead = '0' and memWrite = '0' then
+			addr <= pc;
+			readRam <= '1';
+		else
+			addr <= memAddr;
+			readRam <= memRead;
+		end if;
+	end process;
 
+	UART_control : process(addr, memRead, memWrite, clk)
+	begin
+		if addr = x"BF00" then
+			if memRead = '1' then
+				rdn <= '0';
+				wrn <= '1';
+			elsif memWrite = '1' then
+				rdn <= '1';
+				wrn <= clk;
+			else
+				rdn <= '1';
+				wrn <= '1';
+			end if;
+		else
+			rdn <= '1';
+			wrn <= '1';
+		end if;
+	end process;
+
+	ram1_control : process(addr, memRead, memWrite, clk)
+	begin
+		if addr(15 downto 2) /= x"BF0" & "00" then
+			if memRead = '1' then
+				ram1_oe <= '0';
+				ram1_rw <= '1';
+				ram1_en <= '0';
+			elsif memWrite = '1' then
+				ram1_oe <= '1';
+				ram1_rw <= clk;
+				ram1_en <= '0';
+			else
+				ram1_oe <= '1';
+				ram1_rw <= '1';
+				ram1_en <= '1';
+			end if;
+		else
+			ram1_oe <= '1';
+			ram1_rw <= '1';
+			ram1_en <= '1';
+		end if;
+	end process;
+
+	ram2_control : process(state, addr, memRead, memWrite, clk, pc, dataIn)
+	begin
+		if readRam = '1' then
+			ram2_oe <= '0';
+			ram2_rw <= '1';
+			ram2_en <= '0';
+		elsif memWrite = '1' then
+			ram2_oe <= '1';
+			ram2_rw <= clk;
+			ram2_en <= '0';
+		else
+			ram2_oe <= '1';
+			ram2_rw <= '1';
+			ram2_en <= '1';
+		end if;
+	end process;
+
+	ram1_write: process(memWrite, dataIn, addr)
+    begin
+        if memWrite = '1' and addr(15) = '1' then
+            ram1_data <= dataIn;
+        else
+            ram1_data <= (others => 'Z');
+        end if;
+    end process;
+
+	ram2_write: process(memWrite, dataIn, addr)
+    begin
+        if memWrite = '1' and addr(15) = '0' then
+            ram2_data <= dataIn;
+        else
+            ram2_data <= (others => 'Z');
+        end if;
+    end process;
+
+	memData_read : process(memRead, addr)
+	begin
+		if addr = x"BF01" then
+			ReadData(15 downto 2) <= (others => '0');
+			ReadData(1) <= data_ready;
+			ReadData(0) <= tsre and tbre;
+		elsif addr(15) = '0' then
+			ReadData <= ram2_data;
+		elsif addr(15) = '1' then
+			ReadData <= ram1_data;
+		end if;
+	end process;
+
+	instruction <= ram2_data;
 
 end Behavioral;
 
