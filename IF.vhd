@@ -33,14 +33,14 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity IFF is
-Port (
-		clk :  in STD_LOGIC;
-		rst :  in STD_LOGIC;
-		bubble :  in  STD_LOGIC; -- to stop computer
-		pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
-		pcMuxSel :  in  STD_LOGIC; -- which pc should be selected (bind to decoder output)
-		rpc : out  STD_LOGIC_VECTOR (15 downto 0) -- pc + 1
-	);
+	Port (
+			clk :  in STD_LOGIC;
+			rst :  in STD_LOGIC;
+			bubble :  in  STD_LOGIC; -- to stop computer
+			pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
+			pcMuxSel :  in  STD_LOGIC; -- which pc should be selected (bind to decoder output)
+			rpc : out  STD_LOGIC_VECTOR (15 downto 0) -- pc + 1
+		);
 end IFF;
 
 architecture Behavioral of IFF is
@@ -48,7 +48,7 @@ architecture Behavioral of IFF is
 begin
 
 -- combinational logic
-	InstructionFetch: process(clk, rst, bubble, pcVal, pcMuxSel)
+	process(clk, rst, bubble, pcVal, pcMuxSel)
 	begin
 		if rst <= '0' then
 			pc <= (others => '0');
