@@ -48,8 +48,6 @@ entity FWD is
 			  registerWriteForwardForwardForward : in STD_LOGIC_VECTOR (3 downto 0); -- ( regToWrite in WB
 			  regWriteForwardForwardForwardData : in STD_LOGIC_VECTOR (15 downto 0); -- ( DestVal in WB
 			  
-			  pcMuxSel : in STD_LOGIC_VECTOR (1 downto 0);
-			  
 			  ALURegDataReal1 : out  STD_LOGIC_VECTOR (15 downto 0);
 			  ALURegDataReal2 : out  STD_LOGIC_VECTOR (15 downto 0);
 			  
