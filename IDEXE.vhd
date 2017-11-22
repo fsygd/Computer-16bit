@@ -35,7 +35,7 @@ entity IDEXE is
            rst : in  STD_LOGIC;
 			  bubble : in STD_LOGIC;
 			  
-			  inOp: in  STD_LOGIC_VECTOR(3 downto 0);
+			  inOp : in  STD_LOGIC_VECTOR(3 downto 0);
 			  inOperand1: in  STD_LOGIC_VECTOR(15 downto 0);
 			  inOperand2: in  STD_LOGIC_VECTOR(15 downto 0);
 			  inRegWrite: in STD_LOGIC; -- RegWE
@@ -58,11 +58,60 @@ entity IDEXE is
 end IDEXE;
 
 architecture Behavioral of IDEXE is
+signal OpBuffer : STD_LOGIC_VECTOR(3 downto 0);
+signal Operand1Buffer : STD_LOGIC_VECTOR(15 downto 0);
+signal Operand2Buffer : STD_LOGIC_VECTOR(15 downto 0);
+signal RegWriteBuffer : STD_LOGIC_VECTOR(15 downto 0);
+signal RegToWriteBuffer : STD_LOGIC_VECTOR(15 downto 0);
+signal MemInBuffer : STD_LOGIC_VECTOR(15 downto 0);
+signal MemWriteBuffer : STD_LOGIC_VECTOR(15 downto 0);
+signal MemAccessBuffer : STD_LOGIC_VECTOR(15 downto 0);
 begin
 
 -- pass when clk up
 
 -- if bubble, pass a NOP
-
+	process(clk, rst, bubble, inOp, inOperand1, inOperand2, inRegWrite, inRegToWrite,
+				inMemIn, inMemWrite, inMemAccess)
+	begin
+		if rst = '0' then
+			OpBuffer <= (others => '0');
+			Operand1Buffer <= (others => '0');
+			Operand2Buffer <= (others => '0');
+			RegWriteBuffer <= (others => '0');
+			RegToWriteBuffer <= (others => '0');
+			MemInBuffer <= (others => '0');
+			MemWriteBuffer <= (others => '0');
+			MemAccessBuffer <= (others => '0');
+		elsif clk'event and clk = '1' then
+			if bubble = '0' then
+				OpBuffer <= inOp;
+				Operand1Buffer <= inOperand1;
+				Operand2Buffer <= inOperand2;
+				RegWriteBuffer <= inRegWrite;
+				RegToWriteBuffer <= inRegToWrite;
+				MemInBuffer <= inMemIn;
+				MemWriteBuffer <= inMemWrite;
+				MemAccessBuffer <= inMemAccess;
+			else
+				OpBuffer <= (others => '0');
+				Operand1Buffer <= (others => '0');
+				Operand2Buffer <= (others => '0');
+				RegWriteBuffer <= (others => '0');
+				RegToWriteBuffer <= (others => '0');
+				MemInBuffer <= (others => '0');
+				MemWriteBuffer <= (others => '0');
+				MemAccessBuffer <= (others => '0');
+			end if;
+		end if;
+	end process;
+	outOp <= OpBuffer;
+	outOperand1 <= Operand1Buffer;
+	outOperand2 <= Operand2Buffer;
+	outRegWrite <= RegWriteBuffer;
+	outRegToWrite <= RegToWriteBuffer;
+	outMemIn <= MemInBuffer;
+	outMemWrite <= MemWriteBuffer;
+	outMemAccess <= MemAccessBuffer;
 end Behavioral;
 

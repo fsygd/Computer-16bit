@@ -53,8 +53,37 @@ entity EXEMEM is
 end EXEMEM;
 
 architecture Behavioral of EXEMEM is
-
+signal RegWriteBuffer: STD_LOGIC;
+signal RegToWriteBuffer: STD_LOGIC_VECTOR(3 downto 0);
+signal MemInBuffer: STD_LOGIC_VECTOR(15 downto 0);
+signal MemWriteBuffer: STD_LOGIC;
+signal MemAccessBuffer: STD_LOGIC;
+signal AluoutBuffer: STD_LOGIC_VECTOR(15 downto 0);
 begin
 -- pass when clk up
+	process(clk, rst, inRegWrite, inRegToWrite, inMemIn, inMemWrite, inMemAccess, inAluout)
+	begin
+		if rst = '0' then
+			RegWriteBuffer <= '0';
+			RegToWriteBuffer <= (others => '0');
+			MemInBuffer <= (others => '0');
+			MemWriteBuffer <= '0';
+			MemAccessBuffer <= '0';
+			AluoutBuffer <= (others => '0');
+		elsif clk'event and clk = '1' then
+			RegWriteBuffer <= inRegWrite;
+			RegToWriteBuffer <= inRegToWrite;
+			MemInBuffer <= inMemIn;
+			MemWriteBuffer <= inMemWrite;
+			MemAccessBuffer <= inMemAccess;
+			AluoutBuffer <= inAluout;
+		end if;
+	end process;
+	outRegWrite <= RegWriteBuffer;
+	outRegToWrite <= RegToWriteBuffer;
+	outMemIn <= MemInBuffer;
+	outMemWrite <= MemWriteBuffer;
+	outMemAccess <= MemAccessBuffer;
+	outAluout <= AluoutBuffer;
 end Behavioral;
 
