@@ -72,6 +72,18 @@ begin
 		else
 			bubble <= '0';
 		end if;
+		
+		--ALURegDataReal1
+		if IsRegWriteForward = '1' and registerWriteForward = ALUReg1 then
+			ALURegDataReal1 <= aluoutForwardData;
+		elsif IsRegWriteForwardForward = '1' and registerWriteForwardForward = ALUReg1 then
+			ALURegDataReal1 <= regWriteForwardForwardData;
+		elsif IsRegWriteForwardForwardForward = '1' and registerWriteForwardForwardForward = ALUReg1 then
+			ALURegDataReal1 <= regWriteForwardForwardForwardData;
+		else
+			ALURegDataReal1 <= ALURegData1;
+		end if;
+		
 	end process;
 end Behavioral;
 
