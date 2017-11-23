@@ -47,14 +47,15 @@ entity MMU is
 			instruction : out STD_LOGIC_VECTOR(15 downto 0);
 
 			ram1_oe, ram1_rw, ram1_en : out STD_LOGIC; --RAM1
-			ram1_addr: out STD_LOGIC_VECTOR(15 downto 0);
-			ram1_data: inout STD_LOGIC_VECTOR(15 downto 0);
+			ram1_addr : out STD_LOGIC_VECTOR(15 downto 0);
+			ram1_data : inout STD_LOGIC_VECTOR(15 downto 0);
 
-			ram2_oe, ram2_rw,  ram2_en: out STD_LOGIC; --RAM2
-			ram2_addr: out STD_LOGIC_VECTOR(15 downto 0);
-			ram2_data: inout STD_LOGIC_VECTOR(15 downto 0);
+			ram2_oe, ram2_rw,  ram2_en : out STD_LOGIC; --RAM2
+			ram2_addr : out STD_LOGIC_VECTOR(15 downto 0);
+			ram2_data : inout STD_LOGIC_VECTOR(15 downto 0);
 
-			data_ready, rdn, tbre, tsre, wrn: in STD_LOGIC --COM
+			data_ready, tbre, tsre :  in STD_LOGIC; --COM
+			rdn, wrn : out STD_LOGIC
 		);
 end MMU;
 
@@ -115,7 +116,7 @@ begin
 		end if;
 	end process;
 
-	ram2_control : process(state, addr, memRead, memWrite, clk, pc, dataIn)
+	ram2_control : process(addr, memRead, memWrite, clk, pc, dataIn)
 	begin
 		if readRam = '1' then
 			ram2_oe <= '0';
@@ -153,13 +154,13 @@ begin
 	memData_read : process(memRead, addr)
 	begin
 		if addr = x"BF01" then
-			ReadData(15 downto 2) <= (others => '0');
-			ReadData(1) <= data_ready;
-			ReadData(0) <= tsre and tbre;
+			memData(15 downto 2) <= (others => '0');
+			memData(1) <= data_ready;
+			memData(0) <= tsre and tbre;
 		elsif addr(15) = '0' then
-			ReadData <= ram2_data;
+			memData <= ram2_data;
 		elsif addr(15) = '1' then
-			ReadData <= ram1_data;
+			memData <= ram1_data;
 		end if;
 	end process;
 
