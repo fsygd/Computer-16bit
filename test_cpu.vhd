@@ -133,9 +133,13 @@ BEGin
 
 		rst <= '1';
 		
-		Ram2Data <= "0100101000000010";
+		Ram2Data <= "0100100100000001";
 		
-		Ram1Data <= "0000000000000000";
+		Ram1Data <= "0111000000000011";
+		
+		wait for clk_period;
+		
+		Ram2Data <= "1001100000110000";
 		
 		wait for clk_period;
 		
