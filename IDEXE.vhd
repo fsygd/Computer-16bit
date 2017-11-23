@@ -61,11 +61,11 @@ architecture Behavioral of IDEXE is
 signal OpBuffer : STD_LOGIC_VECTOR(3 downto 0);
 signal Operand1Buffer : STD_LOGIC_VECTOR(15 downto 0);
 signal Operand2Buffer : STD_LOGIC_VECTOR(15 downto 0);
-signal RegWriteBuffer : STD_LOGIC_VECTOR(15 downto 0);
-signal RegToWriteBuffer : STD_LOGIC_VECTOR(15 downto 0);
+signal RegWriteBuffer : STD_LOGIC;
+signal RegToWriteBuffer : STD_LOGIC_VECTOR(3 downto 0);
 signal MemInBuffer : STD_LOGIC_VECTOR(15 downto 0);
-signal MemWriteBuffer : STD_LOGIC_VECTOR(15 downto 0);
-signal MemAccessBuffer : STD_LOGIC_VECTOR(15 downto 0);
+signal MemWriteBuffer : STD_LOGIC;
+signal MemAccessBuffer : STD_LOGIC;
 begin
 
 -- pass when clk up
@@ -78,11 +78,11 @@ begin
 			OpBuffer <= (others => '0');
 			Operand1Buffer <= (others => '0');
 			Operand2Buffer <= (others => '0');
-			RegWriteBuffer <= (others => '0');
+			RegWriteBuffer <= '0';
 			RegToWriteBuffer <= (others => '0');
 			MemInBuffer <= (others => '0');
-			MemWriteBuffer <= (others => '0');
-			MemAccessBuffer <= (others => '0');
+			MemWriteBuffer <= '0';
+			MemAccessBuffer <= '0';
 		elsif clk'event and clk = '1' then
 			if bubble = '0' then
 				OpBuffer <= inOp;
@@ -97,11 +97,11 @@ begin
 				OpBuffer <= (others => '0');
 				Operand1Buffer <= (others => '0');
 				Operand2Buffer <= (others => '0');
-				RegWriteBuffer <= (others => '0');
+				RegWriteBuffer <= '0';
 				RegToWriteBuffer <= (others => '0');
 				MemInBuffer <= (others => '0');
-				MemWriteBuffer <= (others => '0');
-				MemAccessBuffer <= (others => '0');
+				MemWriteBuffer <= '0';
+				MemAccessBuffer <= '0';
 			end if;
 		end if;
 	end process;
