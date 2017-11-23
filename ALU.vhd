@@ -91,8 +91,7 @@ begin
 			when OTHERS =>
 				result <= x"0000";
 		end case;
-		aluout <= result;
 	end process;
-
+	aluout <= result;
 end Behavioral;
 

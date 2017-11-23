@@ -138,6 +138,10 @@ BEGin
 		Ram1Data <= "0000000000000000";
 		
 		wait for clk_period;
+		
+		Ram2Data <= "0000000000000000";
+		
+		wait for clk_period;
 
       -- insert stimulus here 
 

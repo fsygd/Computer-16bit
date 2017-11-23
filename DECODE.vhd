@@ -66,7 +66,7 @@ end DECODE;
 architecture Behavioral of DECODE is
 begin
 -- combinational logic
-	process(instruction)
+	process(instruction, dataRead1, dataRead2)
 		alias opCode: std_logic_vector(4 downto 0) is instruction(15 downto 11);
 		alias rx: std_logic_vector(2 downto 0) is instruction(10 downto 8);
 		alias ry: std_logic_vector(2 downto 0) is instruction(7 downto 5);
