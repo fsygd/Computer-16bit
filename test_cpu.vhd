@@ -86,7 +86,7 @@ ARCHITECTURE behavior OF test_cpu IS
    signal UARTwrn : STD_LOGIC;
 
    -- Clock period definitions
-   constant clk_period : time := 10 ns;
+   constant clk_period : time := 100 ns;
  
 BEGin
  
@@ -128,8 +128,10 @@ BEGin
       wait for clk_period;
 		
 		rst <= '0';
-		
+
 		wait for clk_period;
+
+		rst <= '1';
 		
 		Ram2Data <= "0100101000000010";
 		
