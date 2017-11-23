@@ -163,8 +163,11 @@ begin
 			memData <= ram1_data;
 		end if;
 	end process;
-
-	instruction <= ram2_data;
+	
+	process(addr)
+	begin
+		instruction <= ram2_data;
+	end process;
 
 end Behavioral;
 

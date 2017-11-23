@@ -14,8 +14,8 @@ NET "Ram1Addr[12]" LOC = G15;
 NET "Ram1Addr[13]" LOC = G16;
 NET "Ram1Addr[14]" LOC = H14;
 NET "Ram1Addr[15]" LOC = H15;
-NET "Ram1Addr[16]" LOC = H16;
-NET "Ram1Addr[17]" LOC = H17;
+NET "AddrExtra[0]" LOC = H16;
+NET "AddrExtra[1]" LOC = H17;
 NET "Ram1Data[0]" LOC = J12;
 NET "Ram1Data[1]" LOC = J13;
 NET "Ram1Data[2]" LOC = J14;
@@ -48,8 +48,8 @@ NET "Ram2Addr[12]" LOC = V15;
 NET "Ram2Addr[13]" LOC = V13;
 NET "Ram2Addr[14]" LOC = V12;
 NET "Ram2Addr[15]" LOC = V9;
-NET "Ram2Addr[16]" LOC = U16;
-NET "Ram2Addr[17]" LOC = U15;
+NET "AddrExtra[2]" LOC = U16;
+NET "AddrExtra[3]" LOC = U15;
 
 
 NET "CLK" LOC = B9;

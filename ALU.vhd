@@ -62,11 +62,15 @@ begin
 				end if;
 			
 			when OP_OR =>
-				result <= operand1 - operand2;
+				result <= operand1 or operand2;
 			
 			--fsygd: immediate = 0 ?
 			when OP_SLL =>
-				result <= to_stdlogicvector(to_bitvector(operand1) sll conv_integer(operand2));
+				if operand2 = x"0000" then
+					result <= to_stdlogicvector(to_bitvector(operand1) sll 8);
+				else
+					result <= to_stdlogicvector(to_bitvector(operand1) sll conv_integer(operand2));
+				end if;
 			
 			when OP_SLT =>
 				if signed(operand1) >= signed(operand2) then
@@ -77,7 +81,11 @@ begin
 				
 			--fsygd: immediate = 0 ?
 			when OP_SRA =>
-				result <= to_stdlogicvector(to_bitvector(operand1) sra conv_integer(operand2));
+				if operand2 = x"0000" then
+					result <= to_stdlogicvector(to_bitvector(operand1) sra 8);
+				else
+					result <= to_stdlogicvector(to_bitvector(operand1) sra conv_integer(operand2));
+				end if;
 				
 			when OP_SUB =>
 				result <= operand1 - operand2;

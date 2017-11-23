@@ -36,6 +36,7 @@ Port (
 
         --IFF
         Ram2Addr : out STD_LOGIC_VECTOR(15 downto 0);
+		  AddrExtra: out STD_LOGIC_VECTOR(3 downto 0);
         Ram2Data : inout STD_LOGIC_VECTOR(15 downto 0);
         Ram2OE : out STD_LOGIC;
         Ram2WE : out STD_LOGIC;
@@ -445,6 +446,7 @@ begin
         tsre => UARTtsre,
         wrn => UARTwrn
     );
+	 AddrExtra <= "0000";
     
     
 end Behavioral;
