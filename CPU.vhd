@@ -35,7 +35,7 @@ Port (
         rst : in  STD_LOGIC;
 
         --IFF
-        Ram2Addr : out STD_LOGIC_VECTOR(17 downto 0);
+        Ram2Addr : out STD_LOGIC_VECTOR(15 downto 0);
         Ram2Data : inout STD_LOGIC_VECTOR(15 downto 0);
         Ram2OE : out STD_LOGIC;
         Ram2WE : out STD_LOGIC;
@@ -46,7 +46,7 @@ Port (
         Ram1WE : out STD_LOGIC;
         Ram1OE : out STD_LOGIC;
         Ram1Data : inout STD_LOGIC_VECTOR(15 downto 0);
-        Ram1Addr : out STD_LOGIC_VECTOR(17 downto 0);
+        Ram1Addr : out STD_LOGIC_VECTOR(15 downto 0);
         UARTdataready : in STD_LOGIC;
         UARTtbre : in STD_LOGIC;
         UARTtsre : in STD_LOGIC;
@@ -68,8 +68,6 @@ architecture Behavioral of CPU is
 		);
     end component;
     
-    signal clk : STD_LOGIC; -- outside
-    signal rst : STD_LOGIC; -- outside
     signal bubble : STD_LOGIC;
     signal pcVal : STD_LOGIC_VECTOR (15 downto 0);
     signal pcMuxSel : STD_LOGIC;
@@ -116,7 +114,7 @@ architecture Behavioral of CPU is
     signal op : STD_LOGIC_VECTOR (3 downto 0);
     signal regToRead1 : STD_LOGIC_VECTOR (3 downto 0);
     signal regToRead2 : STD_LOGIC_VECTOR (3 downto 0);
-    signal regToWrite : STD_LOGIC_VECTOR (15 downto 0);
+    signal regToWrite : STD_LOGIC_VECTOR (3 downto 0);
     signal regWrite : STD_LOGIC;
     signal memIn : STD_LOGIC_VECTOR (15 downto 0);
     signal memWrite : STD_LOGIC;
@@ -189,11 +187,11 @@ architecture Behavioral of CPU is
         );
     end component;
         
-    signal memRegWrite : STD_LOGIC_VECTOR (15 downto 0);
-    signal memRegToWrite : STD_LOGIC_VECTOR (15 downto 0);
+    signal memRegWrite : STD_LOGIC;
+    signal memRegToWrite : STD_LOGIC_VECTOR (3 downto 0);
     signal memMemIn : STD_LOGIC_VECTOR (15 downto 0);
-    signal memMemWrite : STD_LOGIC_VECTOR (15 downto 0);
-    signal memMemAccess : STD_LOGIC_VECTOR (15 downto 0);
+    signal memMemWrite : STD_LOGIC;
+    signal memMemAccess : STD_LOGIC;
     signal memAluout : STD_LOGIC_VECTOR (15 downto 0);
 
     component MEM
@@ -237,9 +235,6 @@ architecture Behavioral of CPU is
             dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0)
         );
     end component;
-    
-    signal regToRead1 : STD_LOGIC_VECTOR (3 downto 0);
-    signal regToRead2 : STD_LOGIC_VECTOR (3 downto 0);
     
     component FWD
     Port ( 
@@ -288,10 +283,10 @@ architecture Behavioral of CPU is
 			ram2_addr: out STD_LOGIC_VECTOR(15 downto 0);
 			ram2_data: inout STD_LOGIC_VECTOR(15 downto 0);
 			data_ready: in STD_LOGIC;
-            rdn: in STD_LOGIC;
+            rdn: out STD_LOGIC;
             tbre: in STD_LOGIC; 
             tsre: in STD_LOGIC; 
-            wrn: in STD_LOGIC
+            wrn: out STD_LOGIC
 		);
     end component;
     
@@ -346,7 +341,7 @@ begin
         inRegToWrite => regToWrite,
         inMemIn => memIn,
         inMemWrite => memWrite,
-        inMemAccess => memAccess,
+        inMemAccess => memRead,
         outOp => exeOp,
         outOperand1 => exeOperand1,
         outOperand2 => exeOperand2,
