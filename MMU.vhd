@@ -63,6 +63,9 @@ architecture Behavioral of MMU is
 	signal addr : STD_LOGIC_VECTOR(15 downto 0);
 	signal readRam : STD_LOGIC;
 begin
+	ram1_addr <= addr;
+	ram2_addr <= addr;
+
 	Addr_select : process(memAddr, pc, memRead, memWrite)
 	begin
 		if memRead = '0' and memWrite = '0' then
@@ -116,7 +119,7 @@ begin
 		end if;
 	end process;
 
-	ram2_control : process(addr, memRead, memWrite, clk, pc, dataIn)
+	ram2_control : process(addr, memRead, memWrite, clk, pc, dataIn, readRam)
 	begin
 		if readRam = '1' then
 			ram2_oe <= '0';
@@ -151,7 +154,7 @@ begin
         end if;
     end process;
 
-	memData_read : process(memRead, addr)
+	memData_read : process(memRead, addr, data_ready, tsre, tbre, ram1_data, ram2_data)
 	begin
 		if addr = x"BF01" then
 			memData(15 downto 2) <= (others => '0');
@@ -164,7 +167,7 @@ begin
 		end if;
 	end process;
 	
-	process(addr)
+	process(addr, ram2_data)
 	begin
 		instruction <= ram2_data;
 	end process;

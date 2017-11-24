@@ -66,7 +66,7 @@ end DECODE;
 architecture Behavioral of DECODE is
 begin
 -- combinational logic
-	process(instruction, dataRead1, dataRead2)
+	process(instruction, dataRead1, dataRead2, rpc)
 		alias opCode: std_logic_vector(4 downto 0) is instruction(15 downto 11);
 		alias rx: std_logic_vector(2 downto 0) is instruction(10 downto 8);
 		alias ry: std_logic_vector(2 downto 0) is instruction(7 downto 5);
@@ -161,6 +161,19 @@ begin
 					operand2(7 downto 0) <= instruction(7 downto 0);
 					pcMuxSel <= '0';
 					pcVal <= (others => 'X');
+				else --NOP
+					regToRead1 <= NO_REG;
+					regToRead2 <= NO_REG;
+					regToWrite <= NO_REG;
+					regWrite <= '0';
+					memIn <= (others => 'X');
+					memWrite <= '0';
+					memRead <= '0';
+					op <= (others => 'X');
+					operand1 <= (others => 'X');
+					operand2 <= (others => 'X');
+					pcMuxSel <= '0';
+					pcVal <= (others => 'X');
 				end if;
 			when "11100" => --ADDU|SUBU
 				if instruction(1 downto 0) = "01" then --ADDU
@@ -187,6 +200,19 @@ begin
 					op <= OP_SUB;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
+					pcMuxSel <= '0';
+					pcVal <= (others => 'X');
+				else --NOP
+					regToRead1 <= NO_REG;
+					regToRead2 <= NO_REG;
+					regToWrite <= NO_REG;
+					regWrite <= '0';
+					memIn <= (others => 'X');
+					memWrite <= '0';
+					memRead <= '0';
+					op <= (others => 'X');
+					operand1 <= (others => 'X');
+					operand2 <= (others => 'X');
 					pcMuxSel <= '0';
 					pcVal <= (others => 'X');
 				end if;
@@ -280,6 +306,19 @@ begin
 					op <= OP_OR;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
+					pcMuxSel <= '0';
+					pcVal <= (others => 'X');
+				else --NOP
+					regToRead1 <= NO_REG;
+					regToRead2 <= NO_REG;
+					regToWrite <= NO_REG;
+					regWrite <= '0';
+					memIn <= (others => 'X');
+					memWrite <= '0';
+					memRead <= '0';
+					op <= (others => 'X');
+					operand1 <= (others => 'X');
+					operand2 <= (others => 'X');
 					pcMuxSel <= '0';
 					pcVal <= (others => 'X');
 				end if;
@@ -401,6 +440,19 @@ begin
 					operand2 <= (others => 'X');
 					pcMuxSel <= '0';
 					pcVal <= (others => 'X');
+				else --NOP
+					regToRead1 <= NO_REG;
+					regToRead2 <= NO_REG;
+					regToWrite <= NO_REG;
+					regWrite <= '0';
+					memIn <= (others => 'X');
+					memWrite <= '0';
+					memRead <= '0';
+					op <= (others => 'X');
+					operand1 <= (others => 'X');
+					operand2 <= (others => 'X');
+					pcMuxSel <= '0';
+					pcVal <= (others => 'X');
 				end if;
 			when "00001" => --NOP
 				regToRead1 <= NO_REG;
@@ -442,6 +494,19 @@ begin
 					operand1 <= dataRead1;
 					operand2(15 downto 3) <= (others => '0');
 					operand2(2 downto 0) <= instruction(4 downto 2);
+					pcMuxSel <= '0';
+					pcVal <= (others => 'X');
+				else --NOP
+					regToRead1 <= NO_REG;
+					regToRead2 <= NO_REG;
+					regToWrite <= NO_REG;
+					regWrite <= '0';
+					memIn <= (others => 'X');
+					memWrite <= '0';
+					memRead <= '0';
+					op <= (others => 'X');
+					operand1 <= (others => 'X');
+					operand2 <= (others => 'X');
 					pcMuxSel <= '0';
 					pcVal <= (others => 'X');
 				end if;

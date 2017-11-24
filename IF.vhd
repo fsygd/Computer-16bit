@@ -49,7 +49,7 @@ architecture Behavioral of IFF is
 begin
 
 -- combinational logic
-	process(clk, rst, bubble, pcVal, pcMuxSel)
+	process(clk, rst, bubble, pcVal, pcMuxSel, tempPc)
 	begin
 		if rst <= '0' then
 			tempPc <= (others => '0');
