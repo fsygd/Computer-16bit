@@ -69,7 +69,7 @@ begin
 				if operand2 = x"0000" then
 					result <= to_stdlogicvector(to_bitvector(operand1) sll 8);
 				else
-					result <= to_stdlogicvector(to_bitvector(operand1) sll conv_integer(operand2));
+					result <= to_stdlogicvector(to_bitvector(operand1) sll conv_integer(operand2(2 downto 0)));
 				end if;
 			
 			when OP_SLT =>
@@ -84,7 +84,7 @@ begin
 				if operand2 = x"0000" then
 					result <= to_stdlogicvector(to_bitvector(operand1) sra 8);
 				else
-					result <= to_stdlogicvector(to_bitvector(operand1) sra conv_integer(operand2));
+					result <= to_stdlogicvector(to_bitvector(operand1) sra conv_integer(operand2(2 downto 0)));
 				end if;
 				
 			when OP_SUB =>
