@@ -55,7 +55,9 @@ entity MMU is
 			ram2_data : inout STD_LOGIC_VECTOR(15 downto 0);
 
 			data_ready, tbre, tsre :  in STD_LOGIC; --COM
-			rdn, wrn : out STD_LOGIC
+			rdn, wrn : out STD_LOGIC;
+            
+            pcStop : out STD_LOGIC -- TODO
 		);
 end MMU;
 

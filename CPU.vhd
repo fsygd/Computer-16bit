@@ -62,6 +62,7 @@ architecture Behavioral of CPU is
 			clk :  in STD_LOGIC;
 			rst :  in STD_LOGIC;
 			bubble :  in  STD_LOGIC; -- to stop computer
+            pcStop : in STD_LOGIC; -- TODO
 			pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
 			pcMuxSel :  in  STD_LOGIC; -- which pc should be selected (bind to decoder output)
 			pc : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -74,6 +75,7 @@ architecture Behavioral of CPU is
     signal pcMuxSel : STD_LOGIC;
     signal pc : STD_LOGIC_VECTOR (15 downto 0);
     signal rpc : STD_LOGIC_VECTOR (15 downto 0);
+    signal pcStop : STD_LOGIC;
     
     component IFID
 	Port ( 
@@ -287,7 +289,9 @@ architecture Behavioral of CPU is
             rdn: out STD_LOGIC;
             tbre: in STD_LOGIC; 
             tsre: in STD_LOGIC; 
-            wrn: out STD_LOGIC
+            wrn: out STD_LOGIC;
+            
+            pcStop: out STD_LOGIC -- TODO
 		);
     end component;
     
@@ -299,6 +303,7 @@ begin
         clk => clk,
         rst =>rst,
         bubble => bubble,
+        pcStop => pcStop,
         pcVal => pcVal, 
         pcMuxSel => pcMuxSel,
         pc => pc,
@@ -444,7 +449,8 @@ begin
         rdn => UARTrdn,
         tbre => UARTtbre,
         tsre => UARTtsre,
-        wrn => UARTwrn
+        wrn => UARTwrn,
+        pcStop => pcStop
     );
 	 AddrExtra <= "0000";
     
