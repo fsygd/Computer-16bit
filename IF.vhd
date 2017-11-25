@@ -58,7 +58,7 @@ begin
 			if bubble = '1' or pcStop = '1' then
 				--none
 			elsif pcMuxSel = '1' then
-				tempPc <= pcVal - x"1";
+				tempPc <= pcVal;
 			else
 				tempPc <= tempPc + x"1";
 			end if;

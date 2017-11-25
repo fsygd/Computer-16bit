@@ -53,7 +53,7 @@ begin
 	process(clk, bubble, rst, inRpc, inInstruction)
 	begin
 		if rst = '0' then
-			RpcBuffer <= (others => '0');
+			RpcBuffer <= x"0001";
 			InstructionBuffer <= x"0800";
 		elsif clk'event and clk = '1' then
 			if bubble = '0' then

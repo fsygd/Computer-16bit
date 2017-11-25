@@ -237,7 +237,8 @@ architecture Behavioral of CPU is
             regToRead1 : in  STD_LOGIC_VECTOR (3 downto 0);
             regToRead2 : in  STD_LOGIC_VECTOR (3 downto 0);
             dataRead1 : out  STD_LOGIC_VECTOR (15 downto 0);
-            dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0)
+            dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0);
+				dataOut : out STD_LOGIC_VECTOR(15 downto 0)
         );
     end component;
     
@@ -298,7 +299,7 @@ architecture Behavioral of CPU is
     end component;
     
     signal memOut : STD_LOGIC_VECTOR (15 downto 0);
-    
+    signal dataOut : STD_LOGIC_VECTOR(15 downto 0);
     
 begin
     myIF : IFF port map (
@@ -406,7 +407,8 @@ begin
         regToRead1 => regToRead1,
         regToRead2 => regToRead2,
         dataRead1 => dataRead1,
-        dataRead2 => dataRead2
+        dataRead2 => dataRead2,
+		  dataOut => dataOut
     );
     myFWD : FWD port map (
         ALUReg1 => regToRead1, -- current register used in ALU

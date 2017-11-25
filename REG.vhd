@@ -43,7 +43,9 @@ entity REG is
            regToRead1 : in  STD_LOGIC_VECTOR (3 downto 0);
            regToRead2 : in  STD_LOGIC_VECTOR (3 downto 0);
            dataRead1 : out  STD_LOGIC_VECTOR (15 downto 0);
-           dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0)
+           dataRead2 : out  STD_LOGIC_VECTOR (15 downto 0);
+			  
+			  dataOut : out STD_LOGIC_VECTOR(15 downto 0)
 			  
 			  );
 end REG;
@@ -221,5 +223,6 @@ begin
 	
 	dataRead1 <= dataRead1Buffer;
 	dataRead2 <= dataRead2Buffer;
+	dataOut <= Reg0111;
 end Behavioral;
 
