@@ -52,7 +52,9 @@ Port (
         UARTtbre : in STD_LOGIC;
         UARTtsre : in STD_LOGIC;
         UARTrdn : out STD_LOGIC;
-        UARTwrn : out STD_LOGIC
+        UARTwrn : out STD_LOGIC;
+		  
+		  light : out STD_LOGIC_VECTOR(15 downto 0)
     );
 end CPU;
 
@@ -62,7 +64,7 @@ architecture Behavioral of CPU is
 			clk :  in STD_LOGIC;
 			rst :  in STD_LOGIC;
 			bubble :  in  STD_LOGIC; -- to stop computer
-            pcStop : in STD_LOGIC; -- TODO
+         pcStop : in STD_LOGIC; -- TODO
 			pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
 			pcMuxSel :  in  STD_LOGIC; -- which pc should be selected (bind to decoder output)
 			pc : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -453,20 +455,7 @@ begin
         pcStop => pcStop
     );
 	 AddrExtra <= "0000";
-    
+    light <= instruction;
     
 end Behavioral;
-
-
-
-
-
-
-
-
-
-
-
-
-
 

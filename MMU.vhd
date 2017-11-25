@@ -57,7 +57,7 @@ entity MMU is
 			data_ready, tbre, tsre :  in STD_LOGIC; --COM
 			rdn, wrn : out STD_LOGIC;
             
-            pcStop : out STD_LOGIC -- TODO
+			pcStop : out STD_LOGIC -- TODO
 		);
 end MMU;
 
@@ -68,14 +68,20 @@ begin
 	ram1_addr <= addr;
 	ram2_addr <= addr;
 
-	Addr_select : process(memAddr, pc, memRead, memWrite)
+	Addr_select : process(memAddr, pc, memRead, memWrite, rst)
 	begin
-		if memRead = '0' and memWrite = '0' then
+		if rst = '0' then
+			addr <= (others => '0');
+			readRam <= '0';
+			pcStop <= '0';
+		elsif memRead = '0' and memWrite = '0' then
 			addr <= pc;
 			readRam <= '1';
+			pcStop <= '0';
 		else
 			addr <= memAddr;
 			readRam <= memRead;
+			pcStop <= '1';
 		end if;
 	end process;
 
@@ -172,11 +178,11 @@ begin
 	process(addr, ram2_data, memRead, memWrite, rst)
 	begin
 		if rst = '0' then
-			instruction <= (others => '0');
+			instruction <= x"0800";
 		elsif memRead = '0' and memWrite = '0' then
 			instruction <= ram2_data;
 		else
-			instruction <= (others => '0');
+			instruction <= x"0800";
 		end if;
 	end process;
 

@@ -52,8 +52,8 @@ NET "AddrExtra[2]" LOC = U16;
 NET "AddrExtra[3]" LOC = U15;
 
 
-NET "CLK" LOC = B8;
-#NET "CLK" LOC = U9;
+#NET "CLK" LOC = B8;
+NET "CLK" LOC = U9;
 
 NET "RST" LOC = U10;
 NET "Ram1EN" LOC = M15;
@@ -87,3 +87,20 @@ NET "Ram2Data[12]" LOC = P11;
 NET "Ram2Data[13]" LOC = P10;
 NET "Ram2Data[14]" LOC = N12;
 NET "Ram2Data[15]" LOC = N11;
+
+NET "light[0]" LOC = D10;
+NET "light[1]" LOC = E10;
+NET "light[2]" LOC = A11;
+NET "light[3]" LOC = B11;
+NET "light[4]" LOC = C11;
+NET "light[5]" LOC = D11;
+NET "light[6]" LOC = E11;
+NET "light[7]" LOC = F11;
+NET "light[8]" LOC = A12;
+NET "light[9]" LOC = E12;
+NET "light[10]" LOC = F12;
+NET "light[11]" LOC = A13;
+NET "light[12]" LOC = B13;
+NET "light[13]" LOC = D13;
+NET "light[14]" LOC = E13;
+NET "light[15]" LOC = A14;

@@ -54,7 +54,7 @@ begin
 	begin
 		if rst = '0' then
 			RpcBuffer <= (others => '0');
-			InstructionBuffer <= (others => '0');
+			InstructionBuffer <= x"0800";
 		elsif clk'event and clk = '1' then
 			if bubble = '0' then
 				RpcBuffer <= inRpc;
