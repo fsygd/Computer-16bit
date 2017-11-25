@@ -167,9 +167,15 @@ begin
 		end if;
 	end process;
 	
-	process(addr, ram2_data)
+	process(addr, ram2_data, memRead, memWrite, rst)
 	begin
-		instruction <= ram2_data;
+		if rst = '0' then
+			instruction <= (others => '0');
+		elsif memRead = '0' and memWrite = '0' then
+			instruction <= ram2_data;
+		else
+			instruction <= (others => '0');
+		end if;
 	end process;
 
 end Behavioral;
