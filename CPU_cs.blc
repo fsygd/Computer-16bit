@@ -1,17 +1,11 @@
 Release 14.7 ngcbuild P.20131013 (nt64)
 Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
 
-Command Line: ngcbuild.exe -dd
-C:/Users/321yy/Desktop/yyf/Tsinghua/code/computer/project4/Computer-16bit/_ngo
--p xc3s1200e-fg320-4 -i
-C:\Users\321yy\Desktop\yyf\Tsinghua\code\computer\project4\Computer-16bit\CPU.ng
-c
-C:\Users\321yy\Desktop\yyf\Tsinghua\code\computer\project4\Computer-16bit\CPU_cs
-.ngc
+Command Line: ngcbuild.exe -dd D:/fsygd/code/github/Computer-16bit/_ngo -p
+xc3s1200e-fg320-4 -i D:\fsygd\code\github\Computer-16bit\CPU.ngc
+D:\fsygd\code\github\Computer-16bit\CPU_cs.ngc
 
-Reading NGO file
-"C:/Users/321yy/Desktop/yyf/Tsinghua/code/computer/project4/Computer-16bit/CPU.n
-gc" ...
+Reading NGO file "D:/fsygd/code/github/Computer-16bit/CPU.ngc" ...
 
 Partition Implementation Status
 -------------------------------
@@ -24,14 +18,10 @@ NGCBUILD Design Results Summary:
   Number of errors:     0
   Number of warnings:   0
 
-Total memory usage is 193128 kilobytes
+Total memory usage is 227796 kilobytes
 
-Writing NGC file
-"C:/Users/321yy/Desktop/yyf/Tsinghua/code/computer/project4/Computer-16bit/CPU_c
-s.ngc" ...
-Total REAL time to NGCBUILD completion:  3 sec
-Total CPU time to NGCBUILD completion:   3 sec
+Writing NGC file "D:/fsygd/code/github/Computer-16bit/CPU_cs.ngc" ...
+Total REAL time to NGCBUILD completion:  2 sec
+Total CPU time to NGCBUILD completion:   2 sec
 
-Writing NGCBUILD log file
-"C:/Users/321yy/Desktop/yyf/Tsinghua/code/computer/project4/Computer-16bit/CPU_c
-s.blc"...
+Writing NGCBUILD log file "D:/fsygd/code/github/Computer-16bit/CPU_cs.blc"...
