@@ -29,6 +29,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+
+
+-- my stop become a follower of bubble
+-- add some trivial to process signal
+
 entity CPU is    
 Port (  
         clk : in  STD_LOGIC;
@@ -64,7 +69,7 @@ architecture Behavioral of CPU is
 			clk :  in STD_LOGIC;
 			rst :  in STD_LOGIC;
 			bubble :  in  STD_LOGIC; -- to stop computer
-         pcStop : in STD_LOGIC; -- TODO
+            pcStop : in STD_LOGIC; -- TODO
 			pcVal : in  STD_LOGIC_VECTOR (15 downto 0); -- when jump (to a address stored by registers)
 			pcMuxSel :  in  STD_LOGIC; -- which pc should be selected (bind to decoder output)
 			pc : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -82,6 +87,7 @@ architecture Behavioral of CPU is
     component IFID
 	Port ( 
             bubble : in STD_LOGIC;
+            pcStop : in STD_LOGIC;
             clk :  in STD_LOGIC;
             rst :  in STD_LOGIC;
             inRpc :  in STD_LOGIC_VECTOR (15 downto 0);
@@ -134,6 +140,7 @@ architecture Behavioral of CPU is
             clk : in  STD_LOGIC;
             rst : in  STD_LOGIC;
             bubble : in STD_LOGIC;
+            pcStop : in STD_LOGIC;
             inOp : in  STD_LOGIC_VECTOR(3 downto 0);
             inOperand1: in  STD_LOGIC_VECTOR(15 downto 0);
             inOperand2: in  STD_LOGIC_VECTOR(15 downto 0);
@@ -314,6 +321,7 @@ begin
     );
     myIFID : IFID port map (
         bubble => bubble,
+        pcStop => pcStop,
         clk => clk,
         rst => rst,
         inRpc => rpc, 
@@ -343,6 +351,7 @@ begin
         clk => clk,
         rst => rst,
         bubble => bubble,
+        pcStop => pcStop,
         inOp => op,
         inOperand1 => operand1,
         inOperand2 => operand2,
@@ -457,7 +466,11 @@ begin
         pcStop => pcStop
     );
 	 AddrExtra <= "0000";
-    light <= instruction;
-    
+    light(15 downto 11) <= instruction(15 downto 11);
+    light(10) <= '0';
+    light(9) <= '0';
+    light(8) <= bubble;
+    light(7) <= pcStop;
+    light(6 downto 0) <= dataOut(6 downto 0);
 end Behavioral;
 

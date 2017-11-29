@@ -128,7 +128,7 @@ begin
 				ram1_en <= '0';
 			elsif memWrite = '1' then
 				ram1_oe <= '1';
-				ram1_rw <= clk;
+				ram1_rw <= not clk;
 				ram1_en <= '0';
 			else
 				ram1_oe <= '1';
@@ -154,7 +154,8 @@ begin
 			ram2_en <= '0';
 		elsif memWrite = '1' then
 			ram2_oe <= '1';
-			ram2_rw <= clk;
+			--ram2_rw <= not clk;
+            ram2_rw <= '1';
 			ram2_en <= '0';
 		else
 			ram2_oe <= '1';
@@ -210,6 +211,6 @@ begin
 			instruction <= x"0800";
 		end if;
 	end process;
-
+    
 end Behavioral;
 

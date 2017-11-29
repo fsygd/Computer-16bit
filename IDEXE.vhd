@@ -34,6 +34,7 @@ entity IDEXE is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
 			  bubble : in STD_LOGIC;
+			  pcStop : in STD_LOGIC;
 			  
 			  inOp : in  STD_LOGIC_VECTOR(3 downto 0);
 			  inOperand1: in  STD_LOGIC_VECTOR(15 downto 0);
@@ -72,7 +73,7 @@ begin
 
 -- if bubble, pass a NOP
 	process(clk, rst, bubble, inOp, inOperand1, inOperand2, inRegWrite, inRegToWrite,
-				inMemIn, inMemWrite, inMemAccess)
+				inMemIn, inMemWrite, inMemAccess, pcStop)
 	begin
 		if rst = '0' then
 			OpBuffer <= (others => '0');
@@ -84,26 +85,26 @@ begin
 			MemWriteBuffer <= '0';
 			MemAccessBuffer <= '0';
 		elsif clk'event and clk = '1' then
-			if bubble = '0' then
-				OpBuffer <= inOp;
-				Operand1Buffer <= inOperand1;
-				Operand2Buffer <= inOperand2;
-				RegWriteBuffer <= inRegWrite;
-				RegToWriteBuffer <= inRegToWrite;
-				MemInBuffer <= inMemIn;
-				MemWriteBuffer <= inMemWrite;
-				MemAccessBuffer <= inMemAccess;
-			else
-				OpBuffer <= (others => '0');
-				Operand1Buffer <= (others => '0');
-				Operand2Buffer <= (others => '0');
-				RegWriteBuffer <= '0';
-				RegToWriteBuffer <= (others => '0');
-				MemInBuffer <= (others => '0');
-				MemWriteBuffer <= '0';
-				MemAccessBuffer <= '0';
-			end if;
-		end if;
+            if bubble = '0' and pcStop = '0' then
+                OpBuffer <= inOp;
+                Operand1Buffer <= inOperand1;
+                Operand2Buffer <= inOperand2;
+                RegWriteBuffer <= inRegWrite;
+                RegToWriteBuffer <= inRegToWrite;
+                MemInBuffer <= inMemIn;
+                MemWriteBuffer <= inMemWrite;
+                MemAccessBuffer <= inMemAccess;
+            else
+                OpBuffer <= (others => '0');
+                Operand1Buffer <= (others => '0');
+                Operand2Buffer <= (others => '0');
+                RegWriteBuffer <= '0';
+                RegToWriteBuffer <= (others => '0');
+                MemInBuffer <= (others => '0');
+                MemWriteBuffer <= '0';
+                MemAccessBuffer <= '0';
+            end if;
+        end if;
 	end process;
 	outOp <= OpBuffer;
 	outOperand1 <= Operand1Buffer;

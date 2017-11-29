@@ -32,6 +32,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity IFID is
 	 Port ( 
 			  bubble : in STD_LOGIC;
+			  pcStop : in STD_LOGIC;
            clk :  in STD_LOGIC;
            rst :  in STD_LOGIC;
 			  
@@ -50,16 +51,18 @@ begin
 
 -- when CLK up, pass those data
 -- if bubble, don't do anything
-	process(clk, bubble, rst, inRpc, inInstruction)
+	process(clk, bubble, rst, inRpc, inInstruction, pcStop)
 	begin
 		if rst = '0' then
 			RpcBuffer <= x"0001";
 			InstructionBuffer <= x"0800";
 		elsif clk'event and clk = '1' then
-			if bubble = '0' then
-				RpcBuffer <= inRpc;
-				InstructionBuffer <= inInstruction;
-			end if;
+            if bubble = '0' and pcStop = '0' then
+                RpcBuffer <= inRpc;
+                InstructionBuffer <= inInstruction;
+            else
+                --none
+            end if;
 		end if;
 	end process;
 
