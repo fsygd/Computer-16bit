@@ -89,7 +89,7 @@ begin
 				pcVal <= (others => 'X');
 			when "01000" => --ADDIU3
 				regToRead1 <= "0" & rx;
-				regToRead2 <= "0" & ry;
+				regToRead2 <= NO_REG;
 				regToWrite <= "0" & ry;
 				regWrite <= '1';
 				memIn <= (others => 'X');

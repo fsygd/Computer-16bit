@@ -154,8 +154,8 @@ begin
 			ram2_en <= '0';
 		elsif memWrite = '1' then
 			ram2_oe <= '1';
-			--ram2_rw <= not clk;
-            ram2_rw <= '1';
+			ram2_rw <= not clk;
+         --ram2_rw <= '1';
 			ram2_en <= '0';
 		else
 			ram2_oe <= '1';
