@@ -63,7 +63,6 @@ end MMU;
 
 architecture Behavioral of MMU is
 	signal addr : STD_LOGIC_VECTOR(15 downto 0);
-	signal readRam : STD_LOGIC;
 begin
 	Addr_set : process(addr, rst)
 	begin
@@ -80,113 +79,136 @@ begin
 	begin
 		if rst = '0' then
 			addr <= (others => '0');
-			readRam <= '0';
 			pcStop <= '0';
 		elsif memRead = '0' and memWrite = '0' then
 			addr <= pc;
-			readRam <= '1';
 			pcStop <= '0';
 		else
 			addr <= memAddr;
-			readRam <= memRead;
 			pcStop <= '1';
 		end if;
 	end process;
 
-	UART_control : process(addr, memRead, memWrite, clk, rst)
+	control : process(addr, memRead, memWrite, dataIn, data_ready, tsre, tbre, ram1_data, ram2_data, clk, rst)
 	begin
 		if rst = '0' then
+			ram1_data <= (others => 'Z');
+			ram2_data <= (others => 'Z');
+			
 			rdn <= '1';
 			wrn <= '1';
-		elsif addr = x"BF00" then
-			if memRead = '1' then
-				ram1_data <= (others => 'Z');
-				rdn <= '0';
-				wrn <= '1';
-			elsif memWrite = '1' then
-				ram1_data <= (others => 'Z');
-				rdn <= '1';
-				wrn <= clk;
-			else
-				rdn <= '1';
-				wrn <= '1';
-			end if;
-		else
-			rdn <= '1';
-			wrn <= '1';
-		end if;
-	end process;
-
-	ram1_control : process(addr, memRead, memWrite, clk, rst)
-	begin
-		if rst = '0' then
+			
 			ram1_oe <= '1';
 			ram1_rw <= '1';
 			ram1_en <= '1';
-		elsif addr(15 downto 2) /= x"BF0" & "00" then
-			if memRead = '1' then
-				ram1_oe <= '0';
-				ram1_rw <= '1';
-				ram1_en <= '0';
-			elsif memWrite = '1' then
-				ram1_oe <= '1';
-				ram1_rw <= not clk;
-				ram1_en <= '0';
-			else
+			 
+			ram2_oe <= '1';
+			ram2_rw <= '1';
+			ram2_en <= '1';
+		elsif memRead = '1' then -- read memory
+			if addr = x"BF00" then
+				rdn <= '0';
+				wrn <= '1';
+				
 				ram1_oe <= '1';
 				ram1_rw <= '1';
 				ram1_en <= '1';
+			
+				ram2_oe <= '1';
+				ram2_rw <= '1';
+				ram2_en <= '1';
+				
+				ram1_data <= (others => 'Z');
+				ram2_data <= (others => 'Z');
+			elsif addr = x"BF01" or addr = x"BF02" or addr = x"BF03" then
+				rdn <= '1';
+				wrn <= '1';
+				
+				ram1_oe <= '1';
+				ram1_rw <= '1';
+				ram1_en <= '1';
+				
+				ram2_oe <= '0';
+				ram2_rw <= '1';
+				ram2_en <= '0';
+				
+				ram1_data <= (others => 'Z');
+				ram2_data <= (others => 'Z');
+			else
+				rdn <= '1';
+				wrn <= '1';
+				
+				ram1_oe <= '0';
+				ram1_rw <= '1';
+				ram1_en <= '0';
+				
+				ram2_oe <= '0';
+				ram2_rw <= '1';
+				ram2_en <= '0';
+				
+				ram1_data <= (others => 'Z');
+				ram2_data <= (others => 'Z');
 			end if;
-		else
+		elsif memWrite = '1' then -- write memory
+			if addr = x"BF00" then
+				rdn <= '1';
+				wrn <= clk;
+				
+				ram1_oe <= '1';
+				ram1_rw <= '1';
+				ram1_en <= '1';
+			
+				ram2_oe <= '1';
+				ram2_rw <= '1';
+				ram2_en <= '1';
+				
+				ram1_data <= dataIn;
+				ram2_data <= (others => 'Z');
+			elsif addr = x"BF01" or addr = x"BF02" or addr = x"BF03" then
+				rdn <= '1';
+				wrn <= '1';
+				
+				ram1_oe <= '1';
+				ram1_rw <= '1';
+				ram1_en <= '1';
+				
+				ram2_oe <= '1';
+				ram2_rw <= not clk;
+				ram2_en <= '0';
+				
+				ram1_data <= dataIn;
+				ram2_data <= dataIn;
+			else
+				rdn <= '1';
+				wrn <= '1';
+				
+				ram1_oe <= '1';
+				ram1_rw <= not clk;
+				ram1_en <= '0';
+				
+				ram2_oe <= '1';
+				ram2_rw <= not clk;
+				ram2_en <= '0';
+				
+				ram1_data <= dataIn;
+				ram2_data <= dataIn;
+			end if;
+		else -- read instruction
+			rdn <= '1';
+			wrn <= '1';
+			
 			ram1_oe <= '1';
 			ram1_rw <= '1';
 			ram1_en <= '1';
-		end if;
-	end process;
-
-	ram2_control : process(addr, memRead, memWrite, clk, pc, dataIn, readRam, rst)
-	begin
-		if rst = '0' then
-			ram2_oe <= '1';
-			ram2_rw <= '1';
-			ram2_en <= '1';
-		elsif readRam = '1' then
+			
 			ram2_oe <= '0';
 			ram2_rw <= '1';
 			ram2_en <= '0';
-		elsif memWrite = '1' then
-			ram2_oe <= '1';
-			ram2_rw <= not clk;
-         --ram2_rw <= '1';
-			ram2_en <= '0';
-		else
-			ram2_oe <= '1';
-			ram2_rw <= '1';
-			ram2_en <= '1';
+			
+			ram1_data <= (others => 'Z');
+			ram2_data <= (others => 'Z');
 		end if;
 	end process;
-
-	ram1_write: process(memWrite, dataIn, addr, rst)
-   begin
-		if rst = '0' then
-			ram1_data <= (others => 'Z');
-		elsif memWrite = '1' and addr(15) = '1' then
-          ram1_data <= dataIn;
-      else
-          ram1_data <= (others => 'Z');
-      end if;
-    end process;
-
-	ram2_write: process(memWrite, dataIn, addr, rst)
-   begin
-		if rst = '0' then
-			ram2_data <= (others => 'Z');
-      elsif memWrite = '1' and addr(15) = '0' then
-         ram2_data <= dataIn;
-      else
-         ram2_data <= (others => 'Z');
-      end if;
-   end process;
 
 	memData_read : process(memRead, addr, data_ready, tsre, tbre, ram1_data, ram2_data, rst)
 	begin

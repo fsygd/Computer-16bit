@@ -395,8 +395,8 @@ begin
 				memRead <= '1';
 				op <= OP_ADD;
 				operand1 <= dataRead1;
-				operand2(15 downto 8) <= (others => instruction(7));
-				operand2(7 downto 0) <= instruction(7 downto 0);
+				operand2(15 downto 5) <= (others => instruction(4));
+				operand2(4 downto 0) <= instruction(4 downto 0);
 				pcMuxSel <= '0';
 				pcVal <= (others => '0');
 			when "10010" => --LW_SP

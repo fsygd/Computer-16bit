@@ -307,6 +307,7 @@ architecture Behavioral of CPU is
     
     signal memOut : STD_LOGIC_VECTOR (15 downto 0);
     signal dataOut : STD_LOGIC_VECTOR(15 downto 0);
+	 signal ledrdn : STD_LOGIC; -- fix me
     
 begin
     myIF : IFF port map (
@@ -459,18 +460,20 @@ begin
         ram2_addr => Ram2Addr,
         ram2_data => Ram2Data,
         data_ready => UARTdataready,
-        rdn => UARTrdn,
+        rdn => ledrdn,
         tbre => UARTtbre,
         tsre => UARTtsre,
         wrn => UARTwrn,
         pcStop => pcStop
     );
 	 AddrExtra <= "0000";
+	 UARTrdn <= ledrdn;
     light(15 downto 11) <= instruction(15 downto 11);
-    light(10) <= '0';
-    light(9) <= '0';
-    light(8) <= bubble;
-    light(7) <= pcStop;
-    light(6 downto 0) <= dataOut(6 downto 0);
+    light(10) <= ledrdn;
+    light(9) <= UARTdataready;
+    light(8) <= UARTtbre and UARTtsre;
+    light(7 downto 2) <= dataOut(7 downto 2);
+	 light(1) <= memMemAccess;
+	 light(0) <= memMemWrite;
 end Behavioral;
 
