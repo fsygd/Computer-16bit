@@ -84,6 +84,7 @@ begin
 					result <= x"0000";
 				else
 					result <= x"0001";
+				end if;
 			--fsygd: immediate = 0 ?
 			when OP_SRA =>
 				if operand2 = x"0000" then

@@ -100,9 +100,11 @@ begin
 			wrn <= '1';
 		elsif addr = x"BF00" then
 			if memRead = '1' then
+				ram1_data <= (others => 'Z');
 				rdn <= '0';
 				wrn <= '1';
 			elsif memWrite = '1' then
+				ram1_data <= (others => 'Z');
 				rdn <= '1';
 				wrn <= clk;
 			else
