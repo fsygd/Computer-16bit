@@ -52,7 +52,7 @@ package def is
 	constant IH: STD_LOGIC_VECTOR(3 downto 0):= "1001";
 	constant RA:  STD_LOGIC_VECTOR(3 downto 0):= "1010";
 	constant T: STD_LOGIC_VECTOR(3 downto 0):= "1011";
-	constant NO_REG: STD_LOGIC_VECTOR(3 downto 0):= "XXXX";
+	constant NO_REG: STD_LOGIC_VECTOR(3 downto 0):= "0000";
 	
 	constant ZERO: STD_LOGIC_VECTOR(15 downto 0):= "0000000000000000";
 end def;
