@@ -78,7 +78,7 @@ begin
 				regToRead2 <= NO_REG;
 				regToWrite <= "0" & rx;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
 				op <= OP_ADD;
@@ -86,13 +86,13 @@ begin
 				operand2(15 downto 8) <= (others => instruction(7));
 				operand2(7 downto 0) <= instruction(7 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "01000" => --ADDIU3
 				regToRead1 <= "0" & rx;
 				regToRead2 <= NO_REG;
 				regToWrite <= "0" & ry;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
 				op <= OP_ADD;
@@ -100,14 +100,14 @@ begin
 				operand2(15 downto 4) <= (others => instruction(3));
 				operand2(3 downto 0) <= instruction(3 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "01100" => --ADDSP|BTEQZ|MTSP|SW_RS
 				if instruction(10 downto 8) = "011" then --ADDSP
 					regToRead1 <= SP;
 					regToRead2 <= NO_REG;
 					regToWrite <= SP;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_ADD;
@@ -115,38 +115,38 @@ begin
 					operand2(15 downto 8) <= (others => instruction(7));
 					operand2(7 downto 0) <= instruction(7 downto 0);
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(10 downto 8) = "000" then --BTEQZ
 					regToRead1 <= T;
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					if dataRead1 = ZERO then
 						pcMuxSel <= '1';
 						pcVal <= rpc + ((7 downto 0 => instruction(7)) & instruction(7 downto 0));
 					else
 						pcMuxSel <= '0';
-						pcVal <= (others => 'X');
+						pcVal <= (others => '0');
 					end if;
 				elsif instruction(10 downto 8) = "100" then --MTSP
 					regToRead1 <= "0" & rx;
 					regToRead2 <= NO_REG;
 					regToWrite <= SP;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_PASS_A;
 					operand1 <= dataRead1;
-					operand2 <= (others => 'X');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(10 downto 8) = "010" then --SW_RS
 					regToRead1 <= SP;
 					regToRead2 <= RA;
@@ -160,20 +160,20 @@ begin
 					operand2(15 downto 8) <= (others => instruction(7));
 					operand2(7 downto 0) <= instruction(7 downto 0);
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				else --NOP
 					regToRead1 <= NO_REG;
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				end if;
 			when "11100" => --ADDU|SUBU
 				if instruction(1 downto 0) = "01" then --ADDU
@@ -181,40 +181,40 @@ begin
 					regToRead2 <= "0" & ry;
 					regToWrite <= "0" & rz;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_ADD;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(1 downto 0) = "11" then --SUBU
 					regToRead1 <= "0" & rx;
 					regToRead2 <= "0" & ry;
 					regToWrite <= "0" & rz;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_SUB;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				else --NOP
 					regToRead1 <= NO_REG;
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				end if;
 			when "11101" => --AND|CMP|JALA|JR|JRRA|MFPC|OR
 				if instruction(4 downto 0) = "01100" then --AND
@@ -222,38 +222,38 @@ begin
 					regToRead2 <= "0" & ry;
 					regToWrite <= "0" & rx;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_AND;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(4 downto 0) = "01010" then --CMP
 					regToRead1 <= "0" & rx;
 					regToRead2 <= "0" & ry;
 					regToWrite <= T;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_CMP;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(7 downto 0) = "11000000" then --JALR
 					regToRead1 <= "0" & rx;
 					regToRead2 <= NO_REG;
 					regToWrite <= RA;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_PASS_A;
 					operand1 <= rpc;
-					operand2 <= (others => 'X');
+					operand2 <= (others => '0');
 					pcMuxSel <= '1';
 					pcVal <= dataRead1;
 				elsif instruction(7 downto 0) = "00000000" then --JR
@@ -261,12 +261,12 @@ begin
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '1';
 					pcVal <= dataRead1;
 				elsif instruction(10 downto 0) = "00000100000" then --JRRA
@@ -274,12 +274,12 @@ begin
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '1';
 					pcVal <= dataRead1;
 				elsif instruction(7 downto 0) = "01000000" then --MFPC
@@ -287,52 +287,52 @@ begin
 					regToRead2 <= NO_REG;
 					regToWrite <= "0" & rx;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_PASS_A;
 					operand1 <= rpc;
-					operand2 <= (others => 'X');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(4 downto 0) = "01101" then --OR
 					regToRead1 <= "0" & rx;
 					regToRead2 <= "0" & ry;
 					regToWrite <= "0" & rx;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_OR;
 					operand1 <= dataRead1;
 					operand2 <= dataRead2;
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				else --NOP
 					regToRead1 <= NO_REG;
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				end if;
 			when "00010" => --B
 				regToRead1 <= NO_REG;
 				regToRead2 <= NO_REG;
 				regToWrite <= NO_REG;
 				regWrite <= '0';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
-				op <= (others => 'X');
-				operand1 <= (others => 'X');
-				operand2 <= (others => 'X');
+				op <= (others => '0');
+				operand1 <= (others => '0');
+				operand2 <= (others => '0');
 				pcMuxSel <= '1';
 				pcVal <= rpc + ((4 downto 0 => instruction(10)) & instruction(10 downto 0));
 			when "00100" => --BEQZ
@@ -340,33 +340,33 @@ begin
 				regToRead2 <= NO_REG;
 				regToWrite <= NO_REG;
 				regWrite <= '0';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
-				op <= (others => 'X');
-				operand1 <= (others => 'X');
-				operand2 <= (others => 'X');
+				op <= (others => '0');
+				operand1 <= (others => '0');
+				operand2 <= (others => '0');
 				if dataRead1 = ZERO then
 					pcMuxSel <= '1';
 					pcVal <= rpc + ((7 downto 0 => instruction(7)) & instruction(7 downto 0));
 				else
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				end if;
 			when "00101" => --BNEZ
 				regToRead1 <= "0" & rx;
 				regToRead2 <= NO_REG;
 				regToWrite <= NO_REG;
 				regWrite <= '0';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
-				op <= (others => 'X');
-				operand1 <= (others => 'X');
-				operand2 <= (others => 'X');
+				op <= (others => '0');
+				operand1 <= (others => '0');
+				operand2 <= (others => '0');
 				if dataRead1 = ZERO then
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				else
 					pcMuxSel <= '1';
 					pcVal <= rpc + ((7 downto 0 => instruction(7)) & instruction(7 downto 0));
@@ -376,21 +376,21 @@ begin
 				regToRead2 <= NO_REG;
 				regToWrite <= "0" & rx;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
 				op <= OP_PASS_A;
 				operand1(15 downto 8) <= (others => '0');
 				operand1(7 downto 0) <= instruction(7 downto 0);
-				operand2 <= (others => 'X');
+				operand2 <= (others => '0');
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "10011" => --LW
 				regToRead1 <= "0" & rx;
 				regToRead2 <= NO_REG;
 				regToWrite <= '0' & ry;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '1';
 				op <= OP_ADD;
@@ -398,13 +398,13 @@ begin
 				operand2(15 downto 8) <= (others => instruction(7));
 				operand2(7 downto 0) <= instruction(7 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "10010" => --LW_SP
 				regToRead1 <= SP;
 				regToRead2 <= NO_REG;
 				regToWrite <= "0" & rx;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '1';
 				op <= OP_ADD;
@@ -412,68 +412,68 @@ begin
 				operand2(15 downto 8) <= (others => instruction(7));
 				operand2(7 downto 0) <= instruction(7 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "11110" => --MFIH|MTIH
 				if instruction(7 downto 0) = "00000000" then --MFIH
 					regToRead1 <= IH;
 					regToRead2 <= NO_REG;
 					regToWrite <= "0" & rx;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_PASS_A;
 					operand1 <= dataRead1;
-					operand2 <= (others => 'X');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(7 downto 0) = "000000001" then --MTIH
 					regToRead1 <= "0" & rx;
 					regToRead2 <= NO_REG;
 					regToWrite <= IH;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_PASS_A;
 					operand1 <= dataRead1;
-					operand2 <= (others => 'X');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				else --NOP
 					regToRead1 <= NO_REG;
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				end if;
 			when "00001" => --NOP
 				regToRead1 <= NO_REG;
 				regToRead2 <= NO_REG;
 				regToWrite <= NO_REG;
 				regWrite <= '0';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
-				op <= (others => 'X');
-				operand1 <= (others => 'X');
-				operand2 <= (others => 'X');
+				op <= (others => '0');
+				operand1 <= (others => '0');
+				operand2 <= (others => '0');
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "00110" => --SLL|SRA
 				if instruction(1 downto 0) = "00" then --SLL
 					regToRead1 <= "0" & ry;
 					regToRead2 <= NO_REG;
 					regToWrite <= "0" & rx;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_SLL;
@@ -481,13 +481,13 @@ begin
 					operand2(15 downto 3) <= (others => '0');
 					operand2(2 downto 0) <= instruction(4 downto 2);
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				elsif instruction(1 downto 0) = "11" then --SRA
 					regToRead1 <= "0" & ry;
 					regToRead2 <= NO_REG;
 					regToWrite <= "0" & rx;
 					regWrite <= '1';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
 					op <= OP_SRA;
@@ -495,27 +495,27 @@ begin
 					operand2(15 downto 3) <= (others => '0');
 					operand2(2 downto 0) <= instruction(4 downto 2);
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				else --NOP
 					regToRead1 <= NO_REG;
 					regToRead2 <= NO_REG;
 					regToWrite <= NO_REG;
 					regWrite <= '0';
-					memIn <= (others => 'X');
+					memIn <= (others => '0');
 					memWrite <= '0';
 					memRead <= '0';
-					op <= (others => 'X');
-					operand1 <= (others => 'X');
-					operand2 <= (others => 'X');
+					op <= (others => '0');
+					operand1 <= (others => '0');
+					operand2 <= (others => '0');
 					pcMuxSel <= '0';
-					pcVal <= (others => 'X');
+					pcVal <= (others => '0');
 				end if;
 			when "01010" => --SLTI
 				regToRead1 <= "0" & rx;
 				regToRead2 <= NO_REG;
 				regToWrite <= T;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
 				op <= OP_SLT;
@@ -523,13 +523,13 @@ begin
 				operand2(15 downto 8) <= (others => instruction(7));
 				operand2(7 downto 0) <= instruction(7 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "01011" => --SLTUI
 				regToRead1 <= "0" & rx;
 				regToRead2 <= NO_REG;
 				regToWrite <= T;
 				regWrite <= '1';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
 				op <= OP_SLTU;
@@ -537,7 +537,7 @@ begin
 				operand2(15 downto 8) <= (others => '0');
 				operand2(7 downto 0) <= instruction(7 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "11011" => --SW
 				regToRead1 <= "0" & rx;
 				regToRead2 <= "0" & ry;
@@ -551,7 +551,7 @@ begin
 				operand2(15 downto 5) <= (others => instruction(4));
 				operand2(4 downto 0) <= instruction(4 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when "11010" => --SW_SP
 				regToRead1 <= SP;
 				regToRead2 <= "0" & rx;
@@ -565,20 +565,20 @@ begin
 				operand2(15 downto 8) <= (others => instruction(7));
 				operand2(7 downto 0) <= instruction(7 downto 0);
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 			when others => --NOP
 				regToRead1 <= NO_REG;
 				regToRead2 <= NO_REG;
 				regToWrite <= NO_REG;
 				regWrite <= '0';
-				memIn <= (others => 'X');
+				memIn <= (others => '0');
 				memWrite <= '0';
 				memRead <= '0';
-				op <= (others => 'X');
-				operand1 <= (others => 'X');
-				operand2 <= (others => 'X');
+				op <= (others => '0');
+				operand1 <= (others => '0');
+				operand2 <= (others => '0');
 				pcMuxSel <= '0';
-				pcVal <= (others => 'X');
+				pcVal <= (others => '0');
 		end case;
 	end process;
 end Behavioral;
