@@ -532,7 +532,7 @@ begin
 				memIn <= (others => 'X');
 				memWrite <= '0';
 				memRead <= '0';
-				op <= OP_SLT;
+				op <= OP_SLTU;
 				operand1 <= dataRead1;
 				operand2(15 downto 8) <= (others => '0');
 				operand2(7 downto 0) <= instruction(7 downto 0);

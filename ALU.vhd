@@ -79,6 +79,11 @@ begin
 					result <= x"0001";
 				end if;
 				
+			when OP_SLTU =>
+				if operand1 >= operand2 then
+					result <= x"0000";
+				else
+					result <= x"0001";
 			--fsygd: immediate = 0 ?
 			when OP_SRA =>
 				if operand2 = x"0000" then

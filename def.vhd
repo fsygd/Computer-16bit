@@ -38,6 +38,7 @@ package def is
 	constant OP_SRA:  STD_LOGIC_VECTOR(3 downto 0):= "0111";
 	constant OP_PASS_A: STD_LOGIC_VECTOR(3 downto 0):= "1000";
 	constant OP_PASS_B: STD_LOGIC_VECTOR(3 downto 0):= "1001";
+	constant OP_SLTU: STD_LOGIC_VECTOR(3 downto 0):= "1010";
   
 	constant R0: STD_LOGIC_VECTOR(3 downto 0):= "0000";
 	constant R1: STD_LOGIC_VECTOR(3 downto 0):= "0001";
