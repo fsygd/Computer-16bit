@@ -52,8 +52,9 @@ NET "AddrExtra[2]" LOC = U16;
 NET "AddrExtra[3]" LOC = U15;
 
 
-NET "CLK" LOC = B8;
+#NET "CLK" LOC = B8;
 #NET "CLK" LOC = U9;
+NET "CLK_IN" LOC = B9;
 
 NET "RST" LOC = U10;
 NET "Ram1EN" LOC = M15;

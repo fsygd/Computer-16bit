@@ -36,7 +36,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity CPU is    
 Port (  
-        clk : in  STD_LOGIC;
+        clk_in : in  STD_LOGIC;
         rst : in  STD_LOGIC;
 
         --IFF
@@ -64,6 +64,17 @@ Port (
 end CPU;
 
 architecture Behavioral of CPU is
+	 component dcm
+	Port ( CLKIN_IN        : in    std_logic; 
+          RST_IN          : in    std_logic; 
+          CLKFX_OUT       : out   std_logic; 
+          CLKIN_IBUFG_OUT : out   std_logic; 
+          CLK0_OUT        : out   std_logic; 
+          LOCKED_OUT      : out   std_logic
+			);
+	 end component;
+	signal clk : STD_LOGIC;
+	
     component IFF
 	Port (
 			clk :  in STD_LOGIC;
@@ -310,6 +321,10 @@ architecture Behavioral of CPU is
 	 signal ledrdn : STD_LOGIC; -- fix me
     
 begin
+	 mydcm : dcm port map( CLKIN_IN => clk_in, 
+          RST_IN => '0',
+          CLKFX_OUT => clk
+	  );
     myIF : IFF port map (
         clk => clk,
         rst =>rst,
