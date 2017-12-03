@@ -59,11 +59,29 @@ Port (
         UARTrdn : out STD_LOGIC;
         UARTwrn : out STD_LOGIC;
 		  
-		  light : out STD_LOGIC_VECTOR(15 downto 0)
+		  light : out STD_LOGIC_VECTOR(15 downto 0);
+		  
+		  ps2_data : in STD_LOGIC;
+		  ps2_clk : in STD_LOGIC
     );
 end CPU;
 
 architecture Behavioral of CPU is
+	 component ps2Adapter
+	port(
+		ps2_data : in STD_LOGIC; -- data from ps2
+		ps2_clk : in STD_LOGIC; -- ps2 clk
+		clk : in STD_LOGIC; -- main clk
+		rst : in STD_LOGIC;
+		dataReceive : in STD_LOGIC;
+		dataReady : out STD_LOGIC;
+		output : out STD_LOGIC_VECTOR(7 downto 0) -- data in ascii
+	);
+	 end component;
+	signal ps2_dataReady : STD_LOGIC;
+	signal ps2_dataReceive : STD_LOGIC;
+	signal ps2_output : STD_LOGIC_VECTOR(7 downto 0);
+
 	 component dcm
 	Port ( CLKIN_IN        : in    std_logic; 
           RST_IN          : in    std_logic; 
@@ -481,12 +499,35 @@ begin
         wrn => UARTwrn,
         pcStop => pcStop
     );
+	 
+	 myps2Adapter : ps2Adapter port map (
+			ps2_data => ps2_data,
+			ps2_clk => ps2_clk,
+			clk => clk,
+			rst => rst,
+			dataReceive => ps2_dataReceive,
+			dataReady => ps2_dataReady,
+			output => ps2_output
+	 );
+	 
+	 process(clk, ps2_dataReady)
+	 begin
+		if clk'event and clk = '1' then
+			if ps2_dataReady = '1' then
+				light(15 downto 8) <= ps2_output;
+				ps2_dataReceive <= '1';
+			else
+				ps2_dataReceive <= '0';
+			end if;
+		end if;
+	 end process;
+
 	 AddrExtra <= "0000";
 	 UARTrdn <= ledrdn;
-    light(15 downto 11) <= instruction(15 downto 11);
-    light(10) <= ledrdn;
-    light(9) <= UARTdataready;
-    light(8) <= UARTtbre and UARTtsre;
+    --light(15 downto 11) <= instruction(15 downto 11);
+    --light(10) <= ledrdn;
+    --light(9) <= UARTdataready;
+    --light(8) <= UARTtbre and UARTtsre;
     light(7 downto 2) <= dataOut(7 downto 2);
 	 light(1) <= memMemAccess;
 	 light(0) <= memMemWrite;

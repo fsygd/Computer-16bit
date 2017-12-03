@@ -71,6 +71,9 @@ NET "UARTdataready" LOC = A16;
 NET "UARTtbre" LOC = D14;
 NET "UARTtsre" LOC = N9;
 
+NET "ps2_data" LOC = V6;
+NET "ps2_clk" LOC = U6;
+
 
 NET "Ram2Data[0]" LOC = U13;
 NET "Ram2Data[1]" LOC = T16;
