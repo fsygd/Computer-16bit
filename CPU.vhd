@@ -62,7 +62,17 @@ Port (
 		  light : out STD_LOGIC_VECTOR(15 downto 0);
 		  
 		  ps2_data : in STD_LOGIC;
-		  ps2_clk : in STD_LOGIC
+		  ps2_clk : in STD_LOGIC;
+		  
+		  FlashByte : out std_logic;
+		  FlashVpen : out std_logic;
+		  FlashCE : out std_logic;
+		  FlashOE : out std_logic;
+		  FlashWE : out std_logic;
+		  FlashRP : out std_logic;
+
+		  FlashAddr : out std_logic_vector(22 downto 0);
+		  FlashData : inout std_logic_vector(15 downto 0)
     );
 end CPU;
 
@@ -330,7 +340,17 @@ architecture Behavioral of CPU is
             tsre: in STD_LOGIC; 
             wrn: out STD_LOGIC;
             
-            pcStop: out STD_LOGIC -- TODO
+            pcStop: out STD_LOGIC; -- TODO
+				
+			FlashByte : out std_logic;
+			FlashVpen : out std_logic;
+			FlashCE : out std_logic;
+			FlashOE : out std_logic;
+			FlashWE : out std_logic;
+			FlashRP : out std_logic;
+
+			FlashAddr : out std_logic_vector(22 downto 0);
+			FlashData : inout std_logic_vector(15 downto 0)
 		);
     end component;
     
@@ -497,7 +517,17 @@ begin
         tbre => UARTtbre,
         tsre => UARTtsre,
         wrn => UARTwrn,
-        pcStop => pcStop
+        pcStop => pcStop,
+		  
+		  FlashByte => FlashByte,
+		  FlashVpen => FlashVpen,
+		  FlashCE => FlashCE,
+		  FlashOE => FlashOE,
+		  FlashWE => FlashWE,
+		  FlashRP => FlashRP,
+
+		  FlashAddr => FlashAddr,
+		  FlashData => FlashData
     );
 	 
 	 myps2Adapter : ps2Adapter port map (
