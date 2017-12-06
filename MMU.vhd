@@ -69,7 +69,11 @@ entity MMU is
 			FlashRP : out std_logic;
 			
 			FlashAddr : out std_logic_vector(22 downto 0);
-			FlashData : inout std_logic_vector(15 downto 0)
+			FlashData : inout std_logic_vector(15 downto 0);
+            
+                                                    GWE : out std_logic_vector(0 downto 0);
+                                                    GAddress : out std_logic_vector(10 downto 0);
+                                                    GData : out std_logic_vector(7 downto 0)
 		);
 end MMU;
 
@@ -104,6 +108,14 @@ architecture Behavioral of MMU is
 	type STATE_TYPE is (INIT, READ_FLASH, WRITE_RAM, COMP, DONE);
 	signal state : STATE_TYPE;
 begin
+
+                                                GAddress <= memAddr(10 downto 0);
+                                                GData <= ram1_data(7 downto 0);
+
+                                                GWE <= "1" when (memWrite = '1' and (memAddr(15 downto 11) = "11111"))
+                                                        else "0";
+
+
 	FlashAdapter_c : FlashAdapter port map (
 		clk => clk,
 		rst => rst,

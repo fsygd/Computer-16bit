@@ -154,3 +154,17 @@ NET "FlashData[3]" LOC = J1;
 NET "FlashData[2]" LOC = J2;
 NET "FlashData[1]" LOC = J4;
 NET "FlashData[0]" LOC = J5;
+
+NET "b[2]" LOC = B6;
+NET "b[1]" LOC = A6;
+NET "b[0]" LOC = D5;
+NET "g[2]" LOC = C5;
+NET "g[1]" LOC = C4;
+NET "g[0]" LOC = B4;
+NET "r[2]" LOC = A4;
+NET "r[1]" LOC = C3;
+NET "r[0]" LOC = A7;
+NET "hs" LOC = D6;
+NET "vs" LOC = E6;
+
+

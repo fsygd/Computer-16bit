@@ -36,12 +36,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity CPU is    
 Port (  
-        clk_in : in  STD_LOGIC;
+        clk_in : in  STD_LOGIC; -- 50M
         rst : in  STD_LOGIC;
 
         --IFF
         Ram2Addr : out STD_LOGIC_VECTOR(15 downto 0);
-		  AddrExtra: out STD_LOGIC_VECTOR(3 downto 0);
+		AddrExtra: out STD_LOGIC_VECTOR(3 downto 0);
         Ram2Data : inout STD_LOGIC_VECTOR(15 downto 0);
         Ram2OE : out STD_LOGIC;
         Ram2WE : out STD_LOGIC;
@@ -72,12 +72,36 @@ Port (
 		  FlashRP : out std_logic;
 
 		  FlashAddr : out std_logic_vector(22 downto 0);
-		  FlashData : inout std_logic_vector(15 downto 0)
+		  FlashData : inout std_logic_vector(15 downto 0);
+              
+          hs,vs : out std_logic; -- connect to vga port
+          r,g,b : out std_logic_vector(2 downto 0) -- connect to vga
     );
 end CPU;
 
 architecture Behavioral of CPU is
-	 component ps2Adapter
+    
+                                                    component VGAADAPTER is
+                                                    port(
+                                                        CLKout : in std_logic; -- normal clock
+                                                        CLKin : in std_logic; -- 50M
+                                                        Reset : in  std_logic; -- reset
+                                                        hs,vs : out std_logic; -- connect to vga port
+                                                        r,g,b : out std_logic_vector(2 downto 0); -- connect to vga
+                                                        CharWea : in std_logic_vector(0 downto 0); -- VGAWE, if address > F800 and be in a write state
+                                                        CharAddra : in std_logic_vector(10 downto 0); -- VGA address, address to write
+                                                        CharDina : in std_logic_vector(7 downto 0); -- VGA data to write
+                                                        CharDouta : out std_logic_vector(7 downto 0); -- open (no use?)
+                                                        UpdateType : in std_logic_vector(1 downto 0) -- always "00", make EN = 1
+                                                      );
+                                                    end component;
+    
+    
+                                                    signal GWE : std_logic_vector(0 downto 0);
+                                                    signal GAddress : std_logic_vector(10 downto 0);
+                                                    signal GData : std_logic_vector(7 downto 0);
+
+	component ps2Adapter
 	port(
 		ps2_data : in STD_LOGIC; -- data from ps2
 		ps2_clk : in STD_LOGIC; -- ps2 clk
@@ -92,7 +116,7 @@ architecture Behavioral of CPU is
 	signal ps2_dataReceive : STD_LOGIC;
 	signal ps2_output : STD_LOGIC_VECTOR(7 downto 0);
 
-	 component dcm
+	 component clk_generator
 	Port ( CLKIN_IN        : in    std_logic; 
           RST_IN          : in    std_logic; 
           CLKFX_OUT       : out   std_logic; 
@@ -350,16 +374,21 @@ architecture Behavioral of CPU is
 			FlashRP : out std_logic;
 
 			FlashAddr : out std_logic_vector(22 downto 0);
-			FlashData : inout std_logic_vector(15 downto 0)
+			FlashData : inout std_logic_vector(15 downto 0);
+                                                                GWE : out std_logic_vector(0 downto 0);
+                                                                GAddress : out std_logic_vector(10 downto 0);
+                                                                GData : out std_logic_vector(7 downto 0)
 		);
     end component;
     
     signal memOut : STD_LOGIC_VECTOR (15 downto 0);
     signal dataOut : STD_LOGIC_VECTOR(15 downto 0);
-	 signal ledrdn : STD_LOGIC; -- fix me
+	signal ledrdn : STD_LOGIC; -- fix me
+    
+    
     
 begin
-	 mydcm : dcm port map( CLKIN_IN => clk_in, 
+	 mydcm : clk_generator port map( CLKIN_IN => clk_in, 
           RST_IN => '0',
           CLKFX_OUT => clk
 	  );
@@ -519,15 +548,22 @@ begin
         wrn => UARTwrn,
         pcStop => pcStop,
 		  
-		  FlashByte => FlashByte,
-		  FlashVpen => FlashVpen,
-		  FlashCE => FlashCE,
-		  FlashOE => FlashOE,
-		  FlashWE => FlashWE,
-		  FlashRP => FlashRP,
+        FlashByte => FlashByte,
+        FlashVpen => FlashVpen,
+        FlashCE => FlashCE,
+        FlashOE => FlashOE,
+        FlashWE => FlashWE,
+        FlashRP => FlashRP,
 
-		  FlashAddr => FlashAddr,
-		  FlashData => FlashData
+        FlashAddr => FlashAddr,
+        FlashData => FlashData,
+          
+          
+                                                    GWE => GWE,
+                                                    GAddress => GAddress,
+                                                    GData => GData
+          
+          
     );
 	 
 	 myps2Adapter : ps2Adapter port map (
@@ -539,6 +575,22 @@ begin
 			dataReady => ps2_dataReady,
 			output => ps2_output
 	 );
+                                                 
+                                             myVGAADAPTER : VGAADAPTER port map (
+                                                    CLKout => clk,
+                                                    CLKin => clk,
+                                                    Reset => rst,
+                                                    hs => hs,
+                                                    vs => vs,
+                                                    r => r,
+                                                    g => g,
+                                                    b => b,
+                                                    CharWea => GWE,
+                                                    CharAddra => GAddress,
+                                                    CharDina => GData,
+                                                    CharDouta => open,
+                                                    UpdateType => "00"
+                                             );
 	 
 	 process(clk, ps2_dataReady)
 	 begin
