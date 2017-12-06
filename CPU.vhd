@@ -366,6 +366,10 @@ architecture Behavioral of CPU is
             
             pcStop: out STD_LOGIC; -- TODO
 				
+			ps2_dataReady : in STD_LOGIC;
+			ps2_output : in STD_LOGIC_VECTOR(7 downto 0);
+			ps2_dataReceive : out STD_LOGIC;
+				
 			FlashByte : out std_logic;
 			FlashVpen : out std_logic;
 			FlashCE : out std_logic;
@@ -548,6 +552,10 @@ begin
         wrn => UARTwrn,
         pcStop => pcStop,
 		  
+		  ps2_dataReady => ps2_dataReady,
+		  ps2_output => ps2_output,
+		  ps2_dataReceive => ps2_dataReceive,
+		  
         FlashByte => FlashByte,
         FlashVpen => FlashVpen,
         FlashCE => FlashCE,
@@ -591,25 +599,13 @@ begin
                                                     CharDouta => open,
                                                     UpdateType => "00"
                                              );
-	 
-	 process(clk, ps2_dataReady)
-	 begin
-		if clk'event and clk = '1' then
-			if ps2_dataReady = '1' then
-				light(15 downto 8) <= ps2_output;
-				ps2_dataReceive <= '1';
-			else
-				ps2_dataReceive <= '0';
-			end if;
-		end if;
-	 end process;
 
 	 AddrExtra <= "0000";
 	 UARTrdn <= ledrdn;
-    --light(15 downto 11) <= instruction(15 downto 11);
-    --light(10) <= ledrdn;
-    --light(9) <= UARTdataready;
-    --light(8) <= UARTtbre and UARTtsre;
+    light(15 downto 11) <= instruction(15 downto 11);
+    light(10) <= ledrdn;
+    light(9) <= UARTdataready;
+    light(8) <= UARTtbre and UARTtsre;
     light(7 downto 2) <= dataOut(7 downto 2);
 	 light(1) <= memMemAccess;
 	 light(0) <= memMemWrite;

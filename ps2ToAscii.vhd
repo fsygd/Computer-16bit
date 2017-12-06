@@ -78,6 +78,16 @@ begin
 		x"37" when ps2_data = x"3D" else  -- 7
 		x"38" when ps2_data = x"3E" else  -- 8
 		x"39" when ps2_data = x"46" else  -- 9
+		X"30" when ps2_data = x"70" else  -- NUM0
+		X"31" when ps2_data = x"69" else  -- NUM1
+		X"32" when ps2_data = x"72" else  -- NUM2
+		X"33" when ps2_data = x"7A" else  -- NUM3
+		X"34" when ps2_data = x"6B" else  -- NUM4
+		X"35" when ps2_data = x"73" else  -- NUM5
+		X"36" when ps2_data = x"74" else  -- NUM6
+		X"37" when ps2_data = x"6C" else  -- NUM7
+		X"38" when ps2_data = x"75" else  -- NUM8
+		X"39" when ps2_data = x"7D" else  -- NUM9
 		x"2D" when ps2_data = x"4E" else  -- -
 		x"3D" when ps2_data = x"55" else  -- =
 		x"5C" when ps2_data = x"5D" else  -- \

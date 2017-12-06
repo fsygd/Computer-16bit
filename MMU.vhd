@@ -61,6 +61,10 @@ entity MMU is
             
 			pcStop : out STD_LOGIC;
 			
+			ps2_dataReady : in STD_LOGIC;
+			ps2_output : in STD_LOGIC_VECTOR(7 downto 0);
+			ps2_dataReceive : out STD_LOGIC;
+			
 			FlashByte : out std_logic;
 			FlashVpen : out std_logic;
 			FlashCE : out std_logic;
@@ -133,6 +137,17 @@ begin
 		FlashAddr => FlashAddr,
 		FlashData => FlashData
 	);
+
+	ps2 : process(clk, memRead, memAddr)
+	begin
+		if clk'event and clk = '1' then
+			if memRead = '1' and memAddr = x"BF02" then
+				ps2_dataReceive <= '1';
+			else
+				ps2_dataReceive <= '0';
+			end if;
+		end if;
+	end process;
 
 	Addr_select : process(memFlash, flashBootAddr, flashMemAddr, memAddr, pc, memRead, memWrite, rst)
 	begin
@@ -284,6 +299,12 @@ begin
 			memData(15 downto 2) <= (others => '0');
 			memData(1) <= data_ready;
 			memData(0) <= tsre and tbre;
+		elsif memAddr = x"BF02" then
+			memData(15 downto 8) <= (others => '0');
+			memData(7 downto 0) <= ps2_output;
+		elsif memAddr = x"BF03" then
+			memData(15 downto 1) <= (others => '0');
+			memData(0) <= ps2_dataReady;
 		elsif memAddr(15) = '0' then
 			memData <= ram2_data;
 		elsif memAddr(15) = '1' then

@@ -61,7 +61,7 @@ begin
 	odd <= code(0) xor code(1) xor code(2) xor code(3) xor code(4) xor code(5) xor code(6) xor code(7);
 	outputcode <= code when isReady = '1';
 	
-	process(rst, clk)
+	process(rst, clk, dataReceive)
 	begin
 		if rst = '0' then
 			state <= state_wait;
