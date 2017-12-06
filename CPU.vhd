@@ -83,16 +83,14 @@ architecture Behavioral of CPU is
     
                                                     component VGAADAPTER is
                                                     port(
-                                                        CLKout : in std_logic; -- normal clock
-                                                        CLKin : in std_logic; -- 50M
-                                                        Reset : in  std_logic; -- reset
+                                                        clk_origin : in std_logic; -- normal clock
+                                                        clk_25 : in std_logic; -- 50M
+                                                        rst : in  std_logic; -- reset
                                                         hs,vs : out std_logic; -- connect to vga port
                                                         r,g,b : out std_logic_vector(2 downto 0); -- connect to vga
-                                                        CharWea : in std_logic_vector(0 downto 0); -- VGAWE, if address > F800 and be in a write state
-                                                        CharAddra : in std_logic_vector(10 downto 0); -- VGA address, address to write
-                                                        CharDina : in std_logic_vector(7 downto 0); -- VGA data to write
-                                                        CharDouta : out std_logic_vector(7 downto 0); -- open (no use?)
-                                                        UpdateType : in std_logic_vector(1 downto 0) -- always "00", make EN = 1
+                                                        WE : in std_logic_vector(0 downto 0); -- VGAWE, if address > F800 and be in a write state
+                                                        GAddress : in std_logic_vector(10 downto 0); -- VGA address, address to write
+                                                        GData : in std_logic_vector(7 downto 0) -- VGA data to write
                                                       );
                                                     end component;
     
@@ -577,19 +575,17 @@ begin
 	 );
                                                  
                                              myVGAADAPTER : VGAADAPTER port map (
-                                                    CLKout => clk,
-                                                    CLKin => clk,
-                                                    Reset => rst,
+                                                    clk_origin => clk,
+                                                    clk_25 => clk,
+                                                    rst => rst,
                                                     hs => hs,
                                                     vs => vs,
                                                     r => r,
                                                     g => g,
                                                     b => b,
-                                                    CharWea => GWE,
-                                                    CharAddra => GAddress,
-                                                    CharDina => GData,
-                                                    CharDouta => open,
-                                                    UpdateType => "00"
+                                                    WE => GWE,
+                                                    GAddress => GAddress,
+                                                    GData => GData
                                              );
 	 
 	 process(clk, ps2_dataReady)

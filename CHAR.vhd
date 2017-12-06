@@ -33,18 +33,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity CHAR is
 	port(
-		CLKout : in STD_LOGIC;
-		CLKin : in STD_LOGIC;
-		Reset : in  STD_LOGIC;
+		clk_origin : in STD_LOGIC;
+		clk_25 : in STD_LOGIC;
+		rst : in  STD_LOGIC;
 		EN : in STD_LOGIC;
-		-- CharBufferA
-		CharWea : in STD_LOGIC_VECTOR(0 downto 0);
-		CharAddra : in STD_LOGIC_VECTOR(10 downto 0);
-		CharDina : in STD_LOGIC_VECTOR(7 downto 0);
-		CharDouta : out STD_LOGIC_VECTOR(7 downto 0);
-		-- GRam
-		GRamAddra : out STD_LOGIC_VECTOR(14 downto 0);
-		GRamDina : out STD_LOGIC_VECTOR(15 downto 0)
+        
+		WE : in STD_LOGIC_VECTOR(0 downto 0);
+		GAddress : in STD_LOGIC_VECTOR(10 downto 0);
+		GData : in STD_LOGIC_VECTOR(7 downto 0);
+        
+		PAddress : out STD_LOGIC_VECTOR(14 downto 0);
+		PData : out STD_LOGIC_VECTOR(15 downto 0)
 	  );
 end CHAR;
 
@@ -74,88 +73,47 @@ architecture Behavioral of CHAR is
 	end component;
     -- another GRAM
     
-	signal CharAddrb_in : STD_LOGIC_VECTOR(10 downto 0);
-	signal CharDoutb_in : STD_LOGIC_VECTOR(7 downto 0);
-	signal LettersAddr : STD_LOGIC_VECTOR(11 downto 0);
-	signal LettersDout : STD_LOGIC_VECTOR(15 downto 0);
-	signal LetterDoutReverse : STD_LOGIC_VECTOR(15 downto 0);
-	signal LettersResult : STD_LOGIC_VECTOR(15 downto 0);
+	signal CAddr : STD_LOGIC_VECTOR(10 downto 0);
+	signal CData : STD_LOGIC_VECTOR(7 downto 0);
+	signal LAddr : STD_LOGIC_VECTOR(11 downto 0);
+	signal LData : STD_LOGIC_VECTOR(15 downto 0);
+	signal LDataReverse : STD_LOGIC_VECTOR(15 downto 0);
+	signal LShow : STD_LOGIC_VECTOR(15 downto 0);
 	signal LineNumOfChar : STD_LOGIC_VECTOR(3 downto 0);
 	signal Char : STD_LOGIC_VECTOR(7 downto 0);
 	signal TempChar : STD_LOGIC_VECTOR(7 downto 0);
 	signal Second : STD_LOGIC;
     
-	type STATE_TYPE is (RST, INIT, INIT2, CHARA, GRAMAD, FINISH);
+	type STATE_TYPE is (STATE_RST, INIT, INIT2, CHARA, GRAMAD, FINISH);
 	signal state : STATE_TYPE;
     
 begin
-	LetterDoutReverse(0) <= LettersDout(15);
-	LetterDoutReverse(1) <= LettersDout(14);
-	LetterDoutReverse(2) <= LettersDout(13);
-	LetterDoutReverse(3) <= LettersDout(12);
-	LetterDoutReverse(4) <= LettersDout(11);
-	LetterDoutReverse(5) <= LettersDout(10);
-	LetterDoutReverse(6) <= LettersDout(9);
-	LetterDoutReverse(7) <= LettersDout(8);
-	LetterDoutReverse(8) <= LettersDout(7);
-	LetterDoutReverse(9) <= LettersDout(6);
-	LetterDoutReverse(10) <= LettersDout(5);
-	LetterDoutReverse(11) <= LettersDout(4);
-	LetterDoutReverse(12) <= LettersDout(3);
-	LetterDoutReverse(13) <= LettersDout(2);
-	LetterDoutReverse(14) <= LettersDout(1);
-	LetterDoutReverse(15) <= LettersDout(0);
-	CharBuffer_c : CharBuffer port map(
-		clka => CLKout,
-		clkb => CLKin,
-		wea => CharWea,
-		addra => CharAddra,
-		dina => CharDina,
-		douta => CharDouta,
-		web => "0",
-		addrb => CharAddrb_in,
-		dinb => (others => 'Z'),
-		doutb => CharDoutb_in
-	);
-	Letters_c : Letters port map(
-		clka => CLKin,
-		addra => LettersAddr,
-		douta => LettersDout
-	);
-    
-	Char <= TempChar when TempChar(7) = '0' else
-			not TempChar;
-	LettersResult <= not LetterDoutReverse when Second = '1' and TempChar(7) = '1' else
-						LetterDoutReverse;
-    -- TempChar(7) = '1' ==> reverse color
-    
-	LettersAddr <= Char(7 downto 0) & LineNumOfChar;
-    
-	process( CLKin, Reset, EN )
+
+	process( clk_25, rst, EN )
 	variable RowNum : integer range 0 to 39 := 0;
 	variable LineNum : integer range 0 to 29 := 0;
 	variable num : integer range 0 to 15 := 0;
 	variable result : integer range 0 to 19200;
 	begin
 		if EN = '1' then
-			if Reset = '0' then
+			if rst = '0' then
 				LineNumOfChar <= (others => '0');
-				CharAddrb_in <= (others => '0');
-				state <= RST;
-			elsif rising_edge(CLKin) then
+				CAddr <= (others => '0');
+				state <= STATE_RST;
+			elsif rising_edge(clk_25) then
 				case state is
-					when RST =>
-						CharAddrb_in <= CharAddrb_in + 1; -- input address ++
+					when STATE_RST =>
+						CAddr <= CAddr + 1; -- input address ++
 						state <= INIT;
 					when INIT =>
 						state <= INIT2;
 					when INIT2 =>
-						TempChar <= CharDoutb_in; -- current char val
+						TempChar <= CData; -- current char val
 						state <= CHARA;
 					when CHARA =>
-						GRamDina <= LettersResult; -- 
+						PData <= LShow; -- 
 						result := (LineNum * 16 + num) * 40 + RowNum; -- 
-						GRamAddra <= CONV_STD_LOGIC_VECTOR(result, 15);
+						PAddress <= CONV_STD_LOGIC_VECTOR(result, 15);
 						if LineNumOfChar = "1111" then
 							LineNumOfChar <= "0000";
 							num := 0;
@@ -179,10 +137,10 @@ begin
 							RowNum := RowNum + 1;
 							state <= INIT;
 						end if;
-						CharAddrb_in <= CharAddrb_in + 1;
+						CAddr <= CAddr + 1;
 					when FINISH =>
 						LineNumOfChar <= (others => '0');
-						CharAddrb_in <= (others => '0');
+						CAddr <= (others => '0');
 						state <= INIT;
 					when others =>
 						state <= INIT;
@@ -191,10 +149,10 @@ begin
 		end if;
 	end process;
 
-	process(CLKin)
+	process(clk_25)
 	variable counter : integer range 0 to 25000002 := 0;
 	begin
-		if rising_edge(CLKin) then
+		if rising_edge(clk_25) then
 			counter := counter + 1;
 			if counter = 25000000 then
 				counter := 0;
@@ -203,6 +161,48 @@ begin
 		end if;
 	end process;
     -- second is a color signal
+
+	LDataReverse(0) <= LData(15);
+	LDataReverse(1) <= LData(14);
+	LDataReverse(2) <= LData(13);
+	LDataReverse(3) <= LData(12);
+	LDataReverse(4) <= LData(11);
+	LDataReverse(5) <= LData(10);
+	LDataReverse(6) <= LData(9);
+	LDataReverse(7) <= LData(8);
+	LDataReverse(8) <= LData(7);
+	LDataReverse(9) <= LData(6);
+	LDataReverse(10) <= LData(5);
+	LDataReverse(11) <= LData(4);
+	LDataReverse(12) <= LData(3);
+	LDataReverse(13) <= LData(2);
+	LDataReverse(14) <= LData(1);
+	LDataReverse(15) <= LData(0);
+	myCharBuffer : CharBuffer port map(
+		clka => clk_origin,
+		clkb => clk_25,
+		wea => WE,
+		addra => GAddress,
+		dina => GData,
+		douta => open,
+		web => "0",
+		addrb => CAddr,
+		dinb => (others => 'Z'),
+		doutb => CData
+	);
+	myLetters : Letters port map(
+		clka => clk_25,
+		addra => LAddr,
+		douta => LData
+	);
+    
+	Char <= TempChar when TempChar(7) = '0' else
+			not TempChar;
+	LShow <= not LDataReverse when Second = '1' and TempChar(7) = '1' else
+						LDataReverse;
+    -- TempChar(7) = '1' ==> reverse color
+    
+	LAddr <= Char(7 downto 0) & LineNumOfChar;
     
 end Behavioral;
 

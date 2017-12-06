@@ -31,74 +31,68 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity VGAADAPTER is
 	port(
-		CLKout : in std_logic; -- normal clock
-		CLKin : in std_logic; -- 50M
-		Reset : in  std_logic; -- reset
+		clk_origin : in std_logic; -- normal clock
+		clk_25 : in std_logic; -- 50M
+		rst : in  std_logic; -- reset
 		hs,vs : out std_logic; -- connect to vga port
 		r,g,b : out std_logic_vector(2 downto 0); -- connect to vga
-		CharWea : in std_logic_vector(0 downto 0); -- VGAWE, if address > F800 and be in a write state
-		CharAddra : in std_logic_vector(10 downto 0); -- VGA address, address to write
-		CharDina : in std_logic_vector(7 downto 0); -- VGA data to write
-		CharDouta : out std_logic_vector(7 downto 0); -- open (no use?)
-		UpdateType : in std_logic_vector(1 downto 0) -- always "00", make EN = 1
+		WE : in std_logic_vector(0 downto 0); -- VGAWE, if address > F800 and be in a write state
+		GAddress : in std_logic_vector(10 downto 0); -- VGA address, address to write
+		GData : in std_logic_vector(7 downto 0) -- VGA data to write
 	  );
 end VGAADAPTER;
 
 architecture Behavioral of VGAADAPTER is	
 component CHAR is
 		port(
-			CLKout : in std_logic;
-			CLKin : in std_logic;
-			Reset : in  std_logic;
+			clk_origin : in std_logic;
+			clk_25 : in std_logic;
+			rst : in  std_logic;
 			EN : in std_logic;
-			-- CharBufferA
-			CharAddra : in std_logic_vector(10 downto 0);
-			CharDina : in std_logic_vector(7 downto 0);
-			-- GRam
-			GRamAddra : out std_logic_vector(14 downto 0);
-			GRamDina : out std_logic_vector(15 downto 0);
-			CharWea : in std_logic_vector( 0 downto 0);
-			CharDouta : out std_logic_vector(7 downto 0)
+            
+			GAddress : in std_logic_vector(10 downto 0);
+			GData : in std_logic_vector(7 downto 0);
+            
+			PAddress : out std_logic_vector(14 downto 0);
+			PData : out std_logic_vector(15 downto 0);
+			WE : in std_logic_vector(0 downto 0)
 			);
 	end component;
 	component VGA is
 	 port(
-			reset       :         in  STD_LOGIC;
-			clk_0       :         in  STD_LOGIC;
-			hs,vs       :         out STD_LOGIC;
-			r,g,b       :         out STD_LOGIC_vector(2 downto 0);
-			GRamAddra   :         in std_logic_vector(14 downto 0);
-			GRamDina    :         in std_logic_vector(15 downto 0)
+			rst : in  STD_LOGIC;
+			clk_25 : in  STD_LOGIC;
+			hs,vs : out STD_LOGIC;
+			r,g,b : out STD_LOGIC_vector(2 downto 0);
+			PAddress : in std_logic_vector(14 downto 0);
+			PData : in std_logic_vector(15 downto 0)
 	  );
 	end component;
-	signal GRamAddra_in : std_logic_vector(14 downto 0);
-	signal GRamDina_in : std_logic_vector(15 downto 0);
-	signal CharAdapterEN : std_logic;
+	signal PAddress : std_logic_vector(14 downto 0);
+	signal PData : std_logic_vector(15 downto 0);
 begin
-	CharAdapter_c : CHAR port map(
-		CLKout => CLKout,
-		CLKin => CLKin,
-		Reset => Reset,
-		CharAddra => CharAddra,
-		CharDina => CharDina,
-		CharWea => CharWea,
-		CharDouta => CharDouta,
-		GRamAddra => GRamAddra_in,
-		GRamDina => GRamDina_in,
-		EN => CharAdapterEN
+	myCHAR : CHAR port map(
+		clk_origin => clk_origin,
+		clk_25 => clk_25,
+		rst => rst,
+		GAddress => GAddress,
+		GData => GData,
+		WE => WE,
+		PAddress => PAddress,
+		PData => PData,
+		EN => '1'
 		);
-	VGACore_c: VGA port map(
-		reset => Reset,
-		clk_0 => CLKin,
+	myVGA: VGA port map(
+		rst => rst,
+		clk_25 => clk_25,
 		hs => hs,
 		vs => vs,
 		r => r,
 		g => g,
 		b => b,
-		GRamAddra => GRamAddra_in,
-		GRamDina => GRamDina_in
+		PAddress => PAddress,
+		PData => PData
 		);
-	CharAdapterEN <= '1' when UpdateType = "00" else '0'; 
 
 end Behavioral;
 

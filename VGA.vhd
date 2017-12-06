@@ -33,12 +33,12 @@ use	IEEE.STD_LOGIC_ARITH.ALL;
 
 entity VGA is
 port(
-    reset : in  STD_LOGIC; -- reset
-    clk_0 : in  STD_LOGIC; -- 50M
+    rst : in  STD_LOGIC; -- reset
+    clk_25 : in  STD_LOGIC; -- 50M
     hs,vs : out STD_LOGIC; -- to connect vga port
     r,g,b : out STD_LOGIC_VECTOR(2 downto 0); -- to connect vga port
-    GRamAddra : in STD_LOGIC_VECTOR(14 downto 0); -- where to write
-    GRamDina : in STD_LOGIC_VECTOR(15 downto 0) -- what to write
+    PAddress : in STD_LOGIC_VECTOR(14 downto 0); -- where to write
+    PData : in STD_LOGIC_VECTOR(15 downto 0) -- what to write
 );
 end VGA;
 
@@ -77,8 +77,8 @@ begin
 			clkb => clk, -- IN STD_LOGIC;
 			wea => "1", -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
 			web => "0", -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-			addra => GRamAddra, -- IN STD_LOGIC_VECTOR(14 DOWNTO 0);
-			dina => GRamDina, -- IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+			addra => PAddress, -- IN STD_LOGIC_VECTOR(14 DOWNTO 0);
+			dina => PData, -- IN STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 			douta => GRamDouta, -- OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
 			addrb => GRamAddrb_in, -- IN STD_LOGIC_VECTOR(18 DOWNTO 0);
@@ -94,11 +94,58 @@ begin
  	--end process;
     -- then clk is 25M
     
-    clk <= clk_0;
+    clk <= clk_25;
     
-	process(clk, reset)
+	 process(clk, rst)
 	 begin
-	  	if reset = '0' then
+		  if rst = '0' then
+		   hs1 <= '1';
+		  elsif clk'event and clk = '1' then
+		   	if vector_x >= 656 and vector_x < 752 then
+		    	hs1 <= '0';
+		   	else
+		    	hs1 <= '1';
+		   	end if;
+		  end if;
+	 end process;
+     -- hs1
+     
+	 process(clk, rst)
+	 begin
+	  	if rst = '0' then
+	   		vs1 <= '1';
+	  	elsif clk'event and clk = '1' then
+	   		if vector_y >= 490 and vector_y < 492 then
+	    		vs1 <= '0';
+	   		else
+	    		vs1 <= '1';
+	   		end if;
+	  	end if;
+	 end process;
+     -- vs1
+     
+	 process(clk, rst)
+	 begin
+	  	if rst = '0' then
+	   		hs <= '0';
+	  	elsif clk'event and clk = '1' then
+	   		hs <=  hs1;
+	  	end if;
+	 end process;
+     
+	 process(clk, rst)
+	 begin
+	  	if rst = '0' then
+	   		vs <= '0';
+	  	elsif clk'event and clk = '1' then
+	   		vs <=  vs1;
+	  	end if;
+	 end process;
+     -- hs and vs
+     
+	process(clk, rst)
+	 begin
+	  	if rst = '0' then
 	   		vector_x <= (others => '0');
 	  	elsif clk'event and clk = '1' then
 	   		if vector_x = 799 then
@@ -110,9 +157,9 @@ begin
 	 end process;
      -- so vector_x = {0, 1, 2, ..., 799}
      
-	 process(clk,reset)
+	 process(clk,rst)
 	 begin
-	  	if reset = '0' then
+	  	if rst = '0' then
 	   		vector_y <= (others=>'0');
 	  	elsif clk'event and clk = '1' then
 	   		if vector_x = 799 then
@@ -127,52 +174,6 @@ begin
      -- so vector_y = {0, 1, ..., 524}
      -- so (y, x) = (0, 0), (0, 1), ..., (524, 799)
      
-	 process(clk, reset)
-	 begin
-		  if reset = '0' then
-		   hs1 <= '1';
-		  elsif clk'event and clk = '1' then
-		   	if vector_x >= 656 and vector_x < 752 then
-		    	hs1 <= '0';
-		   	else
-		    	hs1 <= '1';
-		   	end if;
-		  end if;
-	 end process;
-     -- hs1
-     
-	 process(clk, reset)
-	 begin
-	  	if reset = '0' then
-	   		vs1 <= '1';
-	  	elsif clk'event and clk = '1' then
-	   		if vector_y >= 490 and vector_y < 492 then
-	    		vs1 <= '0';
-	   		else
-	    		vs1 <= '1';
-	   		end if;
-	  	end if;
-	 end process;
-     -- vs1
-     
-	 process(clk, reset)
-	 begin
-	  	if reset = '0' then
-	   		hs <= '0';
-	  	elsif clk'event and clk = '1' then
-	   		hs <=  hs1;
-	  	end if;
-	 end process;
-     
-	 process(clk, reset)
-	 begin
-	  	if reset = '0' then
-	   		vs <= '0';
-	  	elsif clk'event and clk = '1' then
-	   		vs <=  vs1;
-	  	end if;
-	 end process;
-     -- hs and vs
      
  	unsignedA <= unsigned(vector_x);
  	unsignedB <= unsigned(vector_y);
@@ -181,9 +182,9 @@ begin
     -- where (y, x) is stored
     
  	GRamAddrb_in <= STD_LOGIC_VECTOR(result);
-	process(reset, clk, vector_x, vector_y)
+	process(rst, clk, vector_x, vector_y)
 	begin
-		if reset = '0' then
+		if rst = '0' then
 			        r1  <= "000";
 					g1	<= "000"; 
 					b1	<= "000";
