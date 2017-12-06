@@ -73,8 +73,8 @@ architecture Behavioral of VGA is
 begin
 	const640 <= "1010000000";
 	GRam_c: GRam port map(
-			clka => clk, -- IN STD_LOGIC;
-			clkb => clk, -- IN STD_LOGIC;
+			clka => clk_0, -- IN STD_LOGIC;
+			clkb => clk_0, -- IN STD_LOGIC;
 			wea => "1", -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
 			web => "0", -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
 			addra => GRamAddra, -- IN STD_LOGIC_VECTOR(14 DOWNTO 0);
@@ -86,16 +86,14 @@ begin
 			doutb => GRamDoutb_in -- OUT STD_LOGIC_VECTOR(0 DOWNTO 0)
 		);
 
-    --process(clk_0)
-    --begin
-    --    if(clk_0'event and clk_0 = '1') then 
-    --         clk <= not clk;
-    --    end if;
- 	--end process;
+    process(clk_0)
+    begin
+        if(clk_0'event and clk_0 = '1') then 
+             clk <= not clk;
+        end if;
+ 	end process;
     -- then clk is 25M
-    
-    clk <= clk_0;
-    
+       
 	process(clk, reset)
 	 begin
 	  	if reset = '0' then

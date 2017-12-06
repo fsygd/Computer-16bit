@@ -138,14 +138,12 @@ begin
 		FlashData => FlashData
 	);
 
-	ps2 : process(clk, memRead, memAddr)
+	ps2 : process(memRead, memAddr)
 	begin
-		if clk'event and clk = '1' then
-			if memRead = '1' and memAddr = x"BF02" then
-				ps2_dataReceive <= '1';
-			else
-				ps2_dataReceive <= '0';
-			end if;
+		if memRead = '1' and memAddr = x"BF02" then
+			ps2_dataReceive <= '1';
+		else
+			ps2_dataReceive <= '0';
 		end if;
 	end process;
 
@@ -197,20 +195,6 @@ begin
 				ram1_rw <= '1';
 				ram1_en <= '1';
 			
-				ram2_oe <= '0';
-				ram2_rw <= '1';
-				ram2_en <= '0';
-				
-				ram1_data <= (others => 'Z');
-				ram2_data <= (others => 'Z');
-			elsif memAddr = x"BF01" or memAddr = x"BF02" or memAddr = x"BF03" then
-				rdn <= '1';
-				wrn <= '1';
-				
-				ram1_oe <= '1';
-				ram1_rw <= '1';
-				ram1_en <= '1';
-				
 				ram2_oe <= '0';
 				ram2_rw <= '1';
 				ram2_en <= '0';

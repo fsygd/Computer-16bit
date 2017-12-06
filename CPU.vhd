@@ -80,6 +80,8 @@ Port (
 end CPU;
 
 architecture Behavioral of CPU is
+
+signal clk_50 : std_logic;
     
                                                     component VGAADAPTER is
                                                     port(
@@ -394,7 +396,8 @@ architecture Behavioral of CPU is
 begin
 	 mydcm : clk_generator port map( CLKIN_IN => clk_in, 
           RST_IN => '0',
-          CLKFX_OUT => clk
+          CLKFX_OUT => clk,
+			 CLK0_OUT => clk_50
 	  );
     myIF : IFF port map (
         clk => clk,
@@ -586,7 +589,7 @@ begin
                                                  
                                              myVGAADAPTER : VGAADAPTER port map (
                                                     CLKout => clk,
-                                                    CLKin => clk,
+                                                    CLKin => clk_50,
                                                     Reset => rst,
                                                     hs => hs,
                                                     vs => vs,
