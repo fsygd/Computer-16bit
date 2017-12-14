@@ -43,18 +43,17 @@ port(
 end VGA;
 
 architecture Behavioral of VGA is
-	signal r1,g1,b1   : STD_LOGIC_VECTOR(2 downto 0);
-	signal hs1,vs1    : STD_LOGIC;				
+	signal r1,g1,b1 : STD_LOGIC_VECTOR(2 downto 0);
+	signal hs1,vs1 : STD_LOGIC;				
 	signal vector_x : STD_LOGIC_VECTOR(9 downto 0);
 	signal vector_y : STD_LOGIC_VECTOR(8 downto 0);
 	signal clk	:	 STD_LOGIC;
-	signal GRamAddrb_in : STD_LOGIC_VECTOR(18 downto 0);
-	signal GRamDoutb_in :  STD_LOGIC_VECTOR(0 downto 0);
-	signal unsignedA : unsigned(9 downto 0);
-	signal unsignedB : unsigned(8 downto 0);
+	signal PointAddr : STD_LOGIC_VECTOR(18 downto 0);
+	signal PointData :  STD_LOGIC_VECTOR(0 downto 0);
+	signal ux : unsigned(9 downto 0);
+	signal uy : unsigned(8 downto 0);
 	signal result : unsigned(18 downto 0);
-	signal GRamDouta : STD_LOGIC_VECTOR(15 downto 0);
-	signal const640 : STD_LOGIC_VECTOR(9 downto 0);
+	signal width : STD_LOGIC_VECTOR(9 downto 0);
     component GRam is
         port (
         clka : in STD_LOGIC;
@@ -71,40 +70,37 @@ architecture Behavioral of VGA is
 	end component;
     
 begin
-	const640 <= "1010000000";
-	GRam_c: GRam port map(
-			clka => clk, -- IN STD_LOGIC;
-			clkb => clk, -- IN STD_LOGIC;
+	myGRam: GRam port map(
+			clka => clk_25, -- IN STD_LOGIC;
+			clkb => clk_25, -- IN STD_LOGIC;
 			wea => "1", -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
 			web => "0", -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
 			addra => PAddress, -- IN STD_LOGIC_VECTOR(14 DOWNTO 0);
 			dina => PData, -- IN STD_LOGIC_VECTOR(15 DOWNTO 0);
 
-			douta => GRamDouta, -- OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
-			addrb => GRamAddrb_in, -- IN STD_LOGIC_VECTOR(18 DOWNTO 0);
+			douta => open, -- OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
+			addrb => PointAddr, -- IN STD_LOGIC_VECTOR(18 DOWNTO 0);
 			dinb => (others => 'Z'), -- IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-			doutb => GRamDoutb_in -- OUT STD_LOGIC_VECTOR(0 DOWNTO 0)
+			doutb => PointData -- OUT STD_LOGIC_VECTOR(0 DOWNTO 0)
 		);
 
-    --process(clk_0)
-    --begin
-    --    if(clk_0'event and clk_0 = '1') then 
-    --         clk <= not clk;
-    --    end if;
- 	--end process;
+    process(clk_25)
+    begin
+        if(clk_25'event and clk_25 = '1') then 
+             clk <= not clk;
+        end if;
+ 	end process;
     -- then clk is 25M
-    
-    clk <= clk_25;
     
 	 process(clk, rst)
 	 begin
 		  if rst = '0' then
 		   hs1 <= '1';
 		  elsif clk'event and clk = '1' then
-		   	if vector_x >= 656 and vector_x < 752 then
-		    	hs1 <= '0';
-		   	else
+		   	if vector_x <= 655 or vector_x >= 752 then
 		    	hs1 <= '1';
+		   	else
+		    	hs1 <= '0';
 		   	end if;
 		  end if;
 	 end process;
@@ -115,10 +111,10 @@ begin
 	  	if rst = '0' then
 	   		vs1 <= '1';
 	  	elsif clk'event and clk = '1' then
-	   		if vector_y >= 490 and vector_y < 492 then
-	    		vs1 <= '0';
-	   		else
+	   		if vector_y <= 489 or vector_y >= 492 then
 	    		vs1 <= '1';
+	   		else
+	    		vs1 <= '0';
 	   		end if;
 	  	end if;
 	 end process;
@@ -160,7 +156,7 @@ begin
 	 process(clk,rst)
 	 begin
 	  	if rst = '0' then
-	   		vector_y <= (others=>'0');
+	   		vector_y <= (others => '0');
 	  	elsif clk'event and clk = '1' then
 	   		if vector_x = 799 then
 	    		if vector_y = 524 then
@@ -175,33 +171,33 @@ begin
      -- so (y, x) = (0, 0), (0, 1), ..., (524, 799)
      
      
- 	unsignedA <= unsigned(vector_x);
- 	unsignedB <= unsigned(vector_y);
-    
- 	result <= unsignedB * unsigned(const640) + unsignedA;
+ 	ux <= unsigned(vector_x);
+ 	uy <= unsigned(vector_y);
+	width <= "1010000000";
+ 	result <= uy * unsigned(width) + ux;
     -- where (y, x) is stored
     
- 	GRamAddrb_in <= STD_LOGIC_VECTOR(result);
+ 	PointAddr <= STD_LOGIC_VECTOR(result);
 	process(rst, clk, vector_x, vector_y)
 	begin
 		if rst = '0' then
-			        r1  <= "000";
-					g1	<= "000"; 
-					b1	<= "000";
+            r1 <= "000";
+            g1 <= "000"; 
+            b1 <= "000";
 		elsif(clk'event and clk = '1') then
 			if vector_x > 639 or vector_y > 479 then 
-					r1  <= "000";
-					g1	<= "000";
-					b1	<= "000";
+                r1 <= "000";
+                g1 <= "000";
+                b1 <= "000";
 			else
-				if GRamDoutb_in = "1" then
-					r1  <= "100";
-					g1	<= "100";
-					b1	<= "100";
+				if PointData = "1" then
+                    r1 <= "100";
+                    g1 <= "100";
+                    b1 <= "100";
 				else
-					r1  <= "000";
-					g1	<= "000";
-					b1	<= "000";
+					r1 <= "000";
+					g1 <= "000";
+					b1 <= "000";
 				end if ;
 			end if;
 		end if;		 
@@ -211,13 +207,13 @@ begin
 	process (hs1, vs1, r1, g1, b1)
 	begin
 		if hs1 = '1' and vs1 = '1' then
-			r	<= r1;
-			g	<= g1;
-			b	<= b1;
+			r <= r1;
+			g <= g1;
+			b <= b1;
 		else
-			r	<= (others => '0');
-			g	<= (others => '0');
-			b	<= (others => '0');
+			r <= (others => '0');
+			g <= (others => '0');
+			b <= (others => '0');
 		end if;
 	end process;
     -- to comply with vga

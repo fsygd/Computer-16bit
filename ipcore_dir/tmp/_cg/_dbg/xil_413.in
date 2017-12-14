@@ -23,7 +23,7 @@ SET_PREFERENCE implementationfiletype Ngc
 SET_PREFERENCE foundationsym false
 SET_PREFERENCE createndf false
 SET_PREFERENCE removerpms false
-SET_PARAMETER Component_Name GRam
+SET_PARAMETER Component_Name CharBuffer
 SET_PARAMETER Interface_Type Native
 SET_PARAMETER AXI_Type AXI4_Full
 SET_PARAMETER AXI_Slave_Type Memory_Slave
@@ -41,13 +41,13 @@ SET_PARAMETER Byte_Size 9
 SET_PARAMETER Algorithm Minimum_Area
 SET_PARAMETER Primitive 8kx2
 SET_PARAMETER Assume_Synchronous_Clk false
-SET_PARAMETER Write_Width_A 16
-SET_PARAMETER Write_Depth_A 19200
-SET_PARAMETER Read_Width_A 16
+SET_PARAMETER Write_Width_A 8
+SET_PARAMETER Write_Depth_A 2048
+SET_PARAMETER Read_Width_A 8
 SET_PARAMETER Operating_Mode_A WRITE_FIRST
 SET_PARAMETER Enable_A Always_Enabled
-SET_PARAMETER Write_Width_B 1
-SET_PARAMETER Read_Width_B 1
+SET_PARAMETER Write_Width_B 8
+SET_PARAMETER Read_Width_B 8
 SET_PARAMETER Operating_Mode_B WRITE_FIRST
 SET_PARAMETER Enable_B Always_Enabled
 SET_PARAMETER Register_PortA_Output_of_Memory_Primitives false
